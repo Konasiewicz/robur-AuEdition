@@ -4,8 +4,8 @@ local scriptName = "AuLissandra"
 local scriptCreator = "AURUM"
 local credits = "Orietto"
 local patchNotesPrevUpdate = "03/13/2022"
-local patchNotesPreVersion = "1.0.0"
-local patchNotesVersion, scriptVersionUpdater = "1.0.1", "1.0.1"
+local patchNotesPreVersion = "1.0.1"
+local patchNotesVersion, scriptVersionUpdater = "1.0.2", "1.0.2"
 local scriptVersion = scriptVersionUpdater
 local scriptLastUpdated = "03/14/2022"
 local scriptIsBeta = false
@@ -26,7 +26,7 @@ local huge, pow, min, max, floor = math.huge, math.pow, math.min, math.max, math
 
 local SDK = _G.CoreEx
 
-SDK.AutoUpdate("https://robur.site/AURUM/AuEdition/raw/branch/master/AuLissandra.lua", scriptVersionUpdater)
+SDK.AutoUpdate("https://github.com/roburAURUM/robur-AuEdition/raw/main/AuLissandra.lua", scriptVersionUpdater)
 
 local ObjManager = SDK.ObjectManager
 local EventManager = SDK.EventManager

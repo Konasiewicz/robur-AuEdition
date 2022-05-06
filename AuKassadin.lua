@@ -4,8 +4,8 @@ local scriptName = "AuKassadin"
 local scriptCreator = "AURUM"
 local credits = "Orietto"
 local patchNotesPrevUpdate = "12/24/2021"
-local patchNotesPreVersion = "1.1.5"
-local patchNotesVersion, scriptVersionUpdater = "1.2.5", "1.2.5"
+local patchNotesPreVersion = "1.2.5"
+local patchNotesVersion, scriptVersionUpdater = "1.2.6", "1.2.6"
 local scriptVersion = scriptVersionUpdater
 local scriptLastUpdated = "02/19/2022"
 local scriptIsBeta = false
@@ -26,7 +26,7 @@ local huge, pow, min, max, floor, pi = math.huge, math.pow, math.min, math.max, 
 
 local SDK = _G.CoreEx
 
-SDK.AutoUpdate("https://robur.site/AURUM/AuEdition/raw/branch/master/AuKassadin.lua", scriptVersionUpdater)
+SDK.AutoUpdate("https://github.com/roburAURUM/robur-AuEdition/raw/main/AuKassadin.lua", scriptVersionUpdater)
 
 local ObjManager = SDK.ObjectManager
 local EventManager = SDK.EventManager

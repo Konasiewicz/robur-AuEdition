@@ -5,8 +5,8 @@ local scriptName = "AuAmumu"
 local scriptCreator = "AURUM"
 local credits = "Orietto"
 local patchNotesPrevUpdate = "11/19/2021"
-local patchNotesPreVersion = "1.1.0"
-local patchNotesVersion, scriptVersionUpdater = "1.1.5", "1.1.5"
+local patchNotesPreVersion = "1.1.5"
+local patchNotesVersion, scriptVersionUpdater = "1.1.6", "1.1.6"
 local scriptVersion = scriptVersionUpdater
 local scriptLastUpdated = "02/19/2022"
 local scriptIsBeta = false
@@ -27,7 +27,7 @@ local huge, pow, min, max, floor = math.huge, math.pow, math.min, math.max, math
 
 local SDK = _G.CoreEx
 
-SDK.AutoUpdate("https://raw.githubusercontent.com/roburAURUM/robur-AuEdition/main/AuAmumu.lua", scriptVersionUpdater)
+SDK.AutoUpdate("https://github.com/roburAURUM/robur-AuEdition/raw/main/AuAmumu.lua", scriptVersionUpdater)
 
 local ObjManager = SDK.ObjectManager
 local EventManager = SDK.EventManager
