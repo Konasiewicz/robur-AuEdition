@@ -3,11 +3,11 @@ if Player.CharName ~= "Karthus" then return end
 local scriptName = "AuKarthus"
 local scriptCreator = "AURUM"
 local credits = "Orietto"
-local patchNotesPrevUpdate = "30/04/2022"
+local patchNotesPrevUpdate = "01/05/2022"
 local patchNotesPreVersion = "1.0.5"
 local patchNotesVersion, scriptVersionUpdater = "1.0.6", "1.0.6"
 local scriptVersion = scriptVersionUpdater
-local scriptLastUpdated = "01/05/2022"
+local scriptLastUpdated = "06/05/2022"
 local scriptIsBeta = false
 
 if scriptIsBeta then
