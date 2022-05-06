@@ -1,15 +1,13 @@
---gapclose E - mybe with if Melee check?
-
 if Player.CharName ~= "Kaisa" then return end
 
 local scriptName = "AuKaiSa"
 local scriptCreator = "AURUM"
 local credits = "Orietto"
 local patchNotesPrevUpdate = "03/04/2022"
-local patchNotesPreVersion = "1.0.0"
-local patchNotesVersion, scriptVersionUpdater = "1.0.1", "1.0.1"
+local patchNotesPreVersion = "1.0.1"
+local patchNotesVersion, scriptVersionUpdater = "1.4.1", "1.4.1"
 local scriptVersion = scriptVersionUpdater
-local scriptLastUpdated = "03/04/2022"
+local scriptLastUpdated = "05/07/2022"
 local scriptIsBeta = false
 
 if scriptIsBeta then
@@ -360,8 +358,6 @@ function OriUtils.IsPosUnderTurret(pos)
 end
 
 
-
-
 local drawData = {
     {slot = slots.Q, id = "Q", displayText = "[Q] Icathian Rain", range = spells.Q.Range},
     {slot = slots.W, id = "W", displayText = "[W] Void Seeker",  range = function () return OriUtils.MGet("misc.WRange") end},
@@ -429,120 +425,94 @@ function Kaisa.GetDamage(target, slot)
 end
 
 function Kaisa.KS()
-    if OriUtils.CanCastSpell(slots.Q, "ks.useQ") or OriUtils.CanCastSpell(slots.W, "ks.useW") then
+    if OriUtils.CanCastSpell(slots.Q, "ks.useQ") then
         local allyHeroes = ObjManager.GetNearby("ally", "heroes")
+        local qReady = OriUtils.CanCastSpell(slots.Q, "ks.useQ")
+        local qTargets = spells.Q:GetTargets()
+        local IsWindingUp = Orbwalker.IsWindingUp()
+        local qCases = Kaisa.qCases()
+        local qEvolved = Kaisa.QEvolved()
         for iKSA, objKSA in ipairs(allyHeroes) do
             local ally = objKSA.AsHero
             if not ally.IsMe and not ally.IsDead then
-                local nearbyEnemiesKS = ObjManager.GetNearby("enemy", "heroes")
-                    for iKS, objKS in ipairs(nearbyEnemiesKS) do
-                        local target = objKS.AsHero
-                        local qDamage = Kaisa.GetDamage(target, slots.Q)
+                if qTargets then
+                    for iKS, objKS in ipairs(qTargets) do
+                        local enemyHero = objKS.AsHero
+                        local qDamage = Kaisa.GetDamage(enemyHero, slots.Q)
                         local healthPredQ = spells.Q:GetHealthPred(objKS)
-                        local wDamage = Kaisa.GetDamage(target, slots.W)
-                        local healthPredW = spells.W:GetHealthPred(objKS)
-                        local missingHP = target.MaxHealth - target.Health
-                        local passiveDamage = (0.15 + 0.025) * missingHP
-                        if OriUtils.MGet("ks.useQ") then
-                            if OriUtils.IsValidTarget(objKS, spells.Q.Range) then
-                                if OriUtils.MGet("ks.qWL." .. target.CharName, true) then
-                                    if Kaisa.QEvolved() then
-                                        if Kaisa.qCases() == 1 then
-                                            if healthPredQ > 0 and healthPredQ < floor(qDamage + ((qDamage / 4) * 11)) then
-                                                if not Orbwalker.IsWindingUp() then
-                                                    if spells.Q:Cast() then
-                                                        return
-                                                    end
-                                                end
-                                            end
-                                        elseif Kaisa.qCases() == 2 then
-                                            if healthPredQ > 0 and healthPredQ < floor(qDamage + ((qDamage / 4) * 5)) then
-                                                if not Orbwalker.IsWindingUp() then
-                                                    if spells.Q:Cast() then
-                                                        return
-                                                    end
-                                                end
-                                            end
-                                        elseif Kaisa.qCases() == 3 then
-                                            if healthPredQ > 0 and healthPredQ < floor(qDamage + ((qDamage / 4) * 3)) then
-                                                if not Orbwalker.IsWindingUp() then
-                                                    if spells.Q:Cast() then
-                                                        return
-                                                    end
-                                                end
-                                            end
-                                        elseif Kaisa.qCases() == 4 then
-                                            if healthPredQ > 0 and healthPredQ < floor(qDamage + ((qDamage / 4) * 2)) then
-                                                if not Orbwalker.IsWindingUp() then
-                                                    if spells.Q:Cast() then
-                                                        return
-                                                    end
-                                                end
-                                            end
-                                        elseif Kaisa.qCases() == 5 then
-                                            if healthPredQ > 0 and healthPredQ < floor(qDamage + ((qDamage / 4) * 1)) then
-                                                if not Orbwalker.IsWindingUp() then
-                                                    if spells.Q:Cast() then
-                                                        return
-                                                    end
-                                                end
+                        if OriUtils.MGet("ks.qWL." .. enemyHero.CharName, true) then
+                            if qEvolved then
+                                if qCases == 1 then
+                                    if healthPredQ > 0 and healthPredQ < floor(qDamage + ((qDamage / 4) * 11)) then
+                                        if not IsWindingUp then
+                                            if spells.Q:Cast() then
+                                                return
                                             end
                                         end
-                                    else
-                                        if Kaisa.qCases() == 1 then
-                                            if healthPredQ > 0 and healthPredQ < floor(qDamage + ((qDamage / 4) * 5)) then
-                                                if not Orbwalker.IsWindingUp() then
-                                                    if spells.Q:Cast() then
-                                                        return
-                                                    end
-                                                end
+                                    end
+                                elseif qCases == 2 then
+                                    if healthPredQ > 0 and healthPredQ < floor(qDamage + ((qDamage / 4) * 5)) then
+                                        if not IsWindingUp then
+                                            if spells.Q:Cast() then
+                                                return
                                             end
-                                        elseif Kaisa.qCases() == 2 then
-                                            if healthPredQ > 0 and healthPredQ < floor(qDamage + ((qDamage / 4) * 2)) then
-                                                if not Orbwalker.IsWindingUp() then
-                                                    if spells.Q:Cast() then
-                                                        return
-                                                    end
-                                                end
+                                        end
+                                    end
+                                elseif qCases == 3 then
+                                    if healthPredQ > 0 and healthPredQ < floor(qDamage + ((qDamage / 4) * 3)) then
+                                        if not IsWindingUp then
+                                            if spells.Q:Cast() then
+                                                return
                                             end
-                                        elseif Kaisa.qCases() == 3 then
-                                            if healthPredQ > 0 and healthPredQ < floor(qDamage + ((qDamage / 4) * 1)) then
-                                                if not Orbwalker.IsWindingUp() then
-                                                    if spells.Q:Cast() then
-                                                        return
-                                                    end
-                                                end
+                                        end
+                                    end
+                                elseif qCases == 4 then
+                                    if healthPredQ > 0 and healthPredQ < floor(qDamage + ((qDamage / 4) * 2)) then
+                                        if not IsWindingUp then
+                                            if spells.Q:Cast() then
+                                                return
                                             end
-                                        elseif Kaisa.qCases() == 4 or Kaisa.qCases() == 5 then
-                                            if healthPredQ > 0 and healthPredQ < floor(qDamage) then
-                                                if not Orbwalker.IsWindingUp() then
-                                                    if spells.Q:Cast() then
-                                                        return
-                                                    end
-                                                end
+                                        end
+                                    end
+                                elseif qCases == 5 then
+                                    if healthPredQ > 0 and healthPredQ < floor(qDamage + ((qDamage / 4) * 1)) then
+                                        if not IsWindingUp then
+                                            if spells.Q:Cast() then
+                                                return
                                             end
                                         end
                                     end
                                 end
-                            end
-                        end
-                        if OriUtils.MGet("ks.useW") then
-                            if OriUtils.IsValidTarget(objKS, spells.W.Range) then
-                                if OriUtils.MGet("ks.wWL." .. target.CharName, true) then
-                                    if target:GetBuff("kaisapassivemarker") and (target:GetBuff("kaisapassivemarker").Count >= 3 or Kaisa.WEvolved() and target:GetBuff("kaisapassivemarker").Count >= 2) then
-                                        if healthPredW > 0 and healthPredW < floor(wDamage + passiveDamage) then
-                                            if not Orbwalker.IsWindingUp() then
-                                                if spells.W:CastOnHitChance(target, Enums.HitChance.Medium) then
-                                                    return
-                                                end
+                            else
+                                if qCases == 1 then
+                                    if healthPredQ > 0 and healthPredQ < floor(qDamage + ((qDamage / 4) * 5)) then
+                                        if not IsWindingUp then
+                                            if spells.Q:Cast() then
+                                                return
                                             end
                                         end
-                                    else
-                                        if healthPredW > 0 and healthPredW < floor(wDamage) then
-                                            if not Orbwalker.IsWindingUp() then
-                                                if spells.W:CastOnHitChance(target, Enums.HitChance.Medium) then
-                                                    return
-                                                end
+                                    end
+                                elseif qCases == 2 then
+                                    if healthPredQ > 0 and healthPredQ < floor(qDamage + ((qDamage / 4) * 2)) then
+                                        if not IsWindingUp then
+                                            if spells.Q:Cast() then
+                                                return
+                                            end
+                                        end
+                                    end
+                                elseif qCases == 3 then
+                                    if healthPredQ > 0 and healthPredQ < floor(qDamage + ((qDamage / 4) * 1)) then
+                                        if not IsWindingUp then
+                                            if spells.Q:Cast() then
+                                                return
+                                            end
+                                        end
+                                    end
+                                elseif qCases == 4 or qCases == 5 then
+                                    if healthPredQ > 0 and healthPredQ < floor(qDamage) then
+                                        if not IsWindingUp then
+                                            if spells.Q:Cast() then
+                                                return
                                             end
                                         end
                                     end
@@ -550,125 +520,172 @@ function Kaisa.KS()
                             end
                         end
                     end
-                
+                end
+            end
+        end
+    end
+
+    if OriUtils.CanCastSpell(slots.W, "ks.useW") then
+        local allyHeroes = ObjManager.GetNearby("ally", "heroes")
+        local wTargets = spells.W:GetTargets()
+        local wEvolved = Kaisa.WEvolved()
+        local IsWindingUp = Orbwalker.IsWindingUp()
+        for iKSA, objKSA in ipairs(allyHeroes) do
+            local ally = objKSA.AsHero
+            if not ally.IsMe and not ally.IsDead then
+                if wTargets then
+                    for iKS, objKS in ipairs(wTargets) do
+                        local target = objKS.AsHero
+                        local wDamage = Kaisa.GetDamage(target, slots.W)
+                        local healthPredW = spells.W:GetHealthPred(objKS)
+                        local missingHP = target.MaxHealth - target.Health
+                        local passiveDamage = (0.15 + 0.025) * missingHP
+                        if OriUtils.MGet("ks.wWL." .. target.CharName, true) then
+                            if target:GetBuff("kaisapassivemarker") and (target:GetBuff("kaisapassivemarker").Count >= 3 or wEvolved and target:GetBuff("kaisapassivemarker").Count >= 2) then
+                                if healthPredW > 0 and healthPredW < floor(wDamage + passiveDamage) then
+                                    if not IsWindingUp then
+                                        if spells.W:CastOnHitChance(target, Enums.HitChance.Low) then
+                                            return
+                                        end
+                                    end
+                                end
+                            else
+                                if healthPredW > 0 and healthPredW < floor(wDamage) then
+                                    if not IsWindingUp then
+                                        if spells.W:CastOnHitChance(target, Enums.HitChance.Low) then
+                                            return
+                                        end
+                                    end
+                                end
+                            end
+                        end
+                    end
+                end
             end
         end
     end
 end
 
 function Kaisa.DrakeSteal()
-    if OriUtils.MGet("steal.useQ") or OriUtils.MGet("steal.useW") then 
-        local enemiesAround = ObjManager.GetNearby("enemy", "heroes")
-        for iSteal, objSteal in ipairs(enemiesAround) do
-            local enemy = objSteal.AsHero
-            if not enemy.IsDead then
-                local nearbyMinions = ObjManager.GetNearby("neutral", "minions")
-                for iM, minion in ipairs(nearbyMinions) do
-                    local minion = minion.AsMinion
+    if OriUtils.CanCastSpell(slots.Q, "steal.useQ") then 
+        local heroCheck = TS:GetTarget(1500)
+        local nearbyMinions = ObjManager.GetNearby("neutral", "minions")
+        local qCases = Kaisa.qCases()
+        local qEvolved = Kaisa.QEvolved()
+        local IsWindingUp = Orbwalker.IsWindingUp()
+        if heroCheck then
+            for iM, minion in ipairs(nearbyMinions) do
+                local minion = minion.AsMinion
+                if OriUtils.IsValidTarget(minion, spells.Q.Range) then
                     local qDamage = Kaisa.GetDamage(minion, slots.Q)
                     local healthPredDrakeQ = spells.Q:GetHealthPred(minion)
-                    local wDamage = Kaisa.GetDamage(minion, slots.W)
-                    local healthPredDrakeW = spells.W:GetHealthPred(minion)
-                    if not minion.IsDead and minion.IsDragon and minion:Distance(enemy) < 1800 or enemy.IsInDragonPit then
-                        if OriUtils.CanCastSpell(slots.Q, "steal.useQ") then
-                            if OriUtils.IsValidTarget(minion, spells.Q.Range) then
-                                if Kaisa.QEvolved() then
-                                    if Kaisa.qCases() == 0 then
-                                        if healthPredDrakeQ > 0 and healthPredDrakeQ < floor(qDamage + ((qDamage / 4) * 11)) then
-                                            if not Orbwalker.IsWindingUp() then
-                                                if spells.Q:Cast() then
-                                                    return
-                                                end
-                                            end
-                                        end
-                                    elseif Kaisa.qCases() == 1 then
-                                        if healthPredDrakeQ > 0 and healthPredDrakeQ < floor(qDamage + ((qDamage / 4) * 5)) then
-                                            if not Orbwalker.IsWindingUp() then
-                                                if spells.Q:Cast() then
-                                                    return
-                                                end
-                                            end
-                                        end
-                                    elseif Kaisa.qCases() == 2 then
-                                        if healthPredDrakeQ > 0 and healthPredDrakeQ < floor(qDamage + ((qDamage / 4) * 3)) then
-                                            if not Orbwalker.IsWindingUp() then
-                                                if spells.Q:Cast() then
-                                                    return
-                                                end
-                                            end
-                                        end
-                                    elseif Kaisa.qCases() == 3 then
-                                        if healthPredDrakeQ > 0 and healthPredDrakeQ < floor(qDamage + ((qDamage / 4) * 2)) then
-                                            if not Orbwalker.IsWindingUp() then
-                                                if spells.Q:Cast() then
-                                                    return
-                                                end
-                                            end
-                                        end
-                                    elseif Kaisa.qCases() == 4 or Kaisa.qCases() == 5 then
-                                        if healthPredDrakeQ > 0 and healthPredDrakeQ < floor(qDamage + ((qDamage / 4) * 1)) then
-                                            if not Orbwalker.IsWindingUp() then
-                                                if spells.Q:Cast() then
-                                                    return
-                                                end
-                                            end
+                    if minion.IsDragon then
+                        if qEvolved then
+                            if qCases == 0 then
+                                if healthPredDrakeQ > 0 and healthPredDrakeQ < floor(qDamage + ((qDamage / 4) * 11)) then
+                                    if not IsWindingUp then
+                                        if spells.Q:Cast() then
+                                            return
                                         end
                                     end
-                                else
-                                    if Kaisa.qCases() == 0 then
-                                        if healthPredDrakeQ > 0 and healthPredDrakeQ < floor(qDamage + ((qDamage / 4) * 5)) then
-                                            if not Orbwalker.IsWindingUp() then
-                                                if spells.Q:Cast() then
-                                                    return
-                                                end
-                                            end
+                                end
+                            elseif qCases == 1 then
+                                if healthPredDrakeQ > 0 and healthPredDrakeQ < floor(qDamage + ((qDamage / 4) * 5)) then
+                                    if not IsWindingUp then
+                                        if spells.Q:Cast() then
+                                            return
                                         end
-                                    elseif Kaisa.qCases() == 1 then
-                                        if healthPredDrakeQ > 0 and healthPredDrakeQ < floor(qDamage + ((qDamage / 4) * 2)) then
-                                            if not Orbwalker.IsWindingUp() then
-                                                if spells.Q:Cast() then
-                                                    return
-                                                end
-                                            end
+                                    end
+                                end
+                            elseif qCases == 2 then
+                                if healthPredDrakeQ > 0 and healthPredDrakeQ < floor(qDamage + ((qDamage / 4) * 3)) then
+                                    if not IsWindingUp then
+                                        if spells.Q:Cast() then
+                                            return
                                         end
-                                    elseif Kaisa.qCases() == 2 or Kaisa.qCases() == 3 or Kaisa.qCases() == 4 then
-                                        if healthPredDrakeQ > 0 and healthPredDrakeQ < floor(qDamage + ((qDamage / 4) * 1)) then
-                                            if not Orbwalker.IsWindingUp() then
-                                                if spells.Q:Cast() then
-                                                    return
-                                                end
-                                            end
+                                    end
+                                end
+                            elseif qCases == 3 then
+                                if healthPredDrakeQ > 0 and healthPredDrakeQ < floor(qDamage + ((qDamage / 4) * 2)) then
+                                    if not IsWindingUp then
+                                        if spells.Q:Cast() then
+                                            return
+                                        end
+                                    end
+                                end
+                            elseif qCases == 4 or qCases == 5 then
+                                if healthPredDrakeQ > 0 and healthPredDrakeQ < floor(qDamage + ((qDamage / 4) * 1)) then
+                                    if not IsWindingUp then
+                                        if spells.Q:Cast() then
+                                            return
+                                        end
+                                    end
+                                end
+                            end
+                        else
+                            if qCases == 0 then
+                                if healthPredDrakeQ > 0 and healthPredDrakeQ < floor(qDamage + ((qDamage / 4) * 5)) then
+                                    if not IsWindingUp then
+                                        if spells.Q:Cast() then
+                                            return
+                                        end
+                                    end
+                                end
+                            elseif qCases == 1 then
+                                if healthPredDrakeQ > 0 and healthPredDrakeQ < floor(qDamage + ((qDamage / 4) * 2)) then
+                                    if not IsWindingUp then
+                                        if spells.Q:Cast() then
+                                            return
+                                        end
+                                    end
+                                end
+                            elseif qCases == 2 or qCases == 3 or qCases == 4 then
+                                if healthPredDrakeQ > 0 and healthPredDrakeQ < floor(qDamage + ((qDamage / 4) * 1)) then
+                                    if not IsWindingUp then
+                                        if spells.Q:Cast() then
+                                            return
                                         end
                                     end
                                 end
                             end
                         end
-                        if OriUtils.CanCastSpell(slots.W, "steal.useW") then
-                            if OriUtils.IsValidTarget(minion, spells.W.Range) then
-                                local missingHP = minion.MaxHealth - minion.Health
-                                local passiveDamage = (0.15 + 0.025) * missingHP
-                                INFO(wDamage + passiveDamage)
-                                if wDamage + passiveDamage > 400 then
-                                    wDamage = 400
-                                    passiveDamage = 0
-                                end
-                                INFO(wDamage + passiveDamage)
-                                if minion:GetBuff("kaisapassivemarker") and (minion:GetBuff("kaisapassivemarker").Count >= 3 or Kaisa.WEvolved() and minion:GetBuff("kaisapassivemarker").Count >= 2) then
-                                    
-                                    if healthPredDrakeW > 0 and healthPredDrakeW < floor(wDamage + passiveDamage - 50) then
-                                        if not Orbwalker.IsWindingUp() then
-                                            if spells.W:CastOnHitChance(minion, Enums.HitChance.Medium) then
-                                                return
-                                            end
-                                        end
+                    end
+                end
+            end
+        end
+    end
+
+    if OriUtils.CanCastSpell(slots.W, "steal.useW") then 
+        local heroCheck = TS:GetTarget(1500)
+        local nearbyMinions = ObjManager.GetNearby("neutral", "minions")
+        local wEvolved = Kaisa.WEvolved()
+        local IsWindingUp = Orbwalker.IsWindingUp()
+        if heroCheck then
+            for iM, minion in ipairs(nearbyMinions) do
+                local minion = minion.AsMinion
+                if OriUtils.IsValidTarget(minion, spells.W.Range) then
+                    local wDamage = Kaisa.GetDamage(minion, slots.W)
+                    local healthPredDrakeW = spells.W:GetHealthPred(minion)
+                    local missingHP = minion.MaxHealth - minion.Health
+                    local passiveDamage = (0.15 + 0.025) * missingHP
+                    if wDamage + passiveDamage > 400 then
+                        wDamage = 400
+                        passiveDamage = 0
+                    end
+                    if minion.IsDragon then
+                        if minion:GetBuff("kaisapassivemarker") and (minion:GetBuff("kaisapassivemarker").Count >= 3 or wEvolved and minion:GetBuff("kaisapassivemarker").Count >= 2) then
+                            if healthPredDrakeW > 0 and healthPredDrakeW < floor(wDamage + passiveDamage - 50) then
+                                if not IsWindingUp then
+                                    if spells.W:CastOnHitChance(minion, Enums.HitChance.Low) then
+                                        return
                                     end
-                                else
-                                    if healthPredDrakeW > 0 and healthPredDrakeW < floor(wDamage - 50) then
-                                        if not Orbwalker.IsWindingUp() then
-                                            if spells.W:CastOnHitChance(minion, Enums.HitChance.Medium) then
-                                                return
-                                            end
-                                        end
+                                end
+                            end
+                        else
+                            if healthPredDrakeW > 0 and healthPredDrakeW < floor(wDamage - 50) then
+                                if not IsWindingUp then
+                                    if spells.W:CastOnHitChance(minion, Enums.HitChance.Low) then
+                                        return
                                     end
                                 end
                             end
@@ -681,117 +698,83 @@ function Kaisa.DrakeSteal()
 end
 
 function Kaisa.BaronSteal()
-    if OriUtils.MGet("steal.useQ") or OriUtils.MGet("steal.useW") then 
-        local enemiesAround = ObjManager.GetNearby("enemy", "heroes")
-        for iSteal, objSteal in ipairs(enemiesAround) do
-            local enemy = objSteal.AsHero
-            if not enemy.IsDead then
-                local nearbyMinions = ObjManager.GetNearby("neutral", "minions")
-                for iM, minion in ipairs(nearbyMinions) do
-                    local minion = minion.AsMinion
+    if OriUtils.CanCastSpell(slots.Q, "steal.useQ") then 
+        local heroCheck = TS:GetTarget(1500)
+        local nearbyMinions = ObjManager.GetNearby("neutral", "minions")
+        local qCases = Kaisa.qCases()
+        local qEvolved = Kaisa.QEvolved()
+        local IsWindingUp = Orbwalker.IsWindingUp()
+        if heroCheck then
+            for iM, minion in ipairs(nearbyMinions) do
+                local minion = minion.AsMinion
+                if OriUtils.IsValidTarget(minion, spells.Q.Range) then
                     local qDamage = Kaisa.GetDamage(minion, slots.Q)
                     local healthPredBaronQ = spells.Q:GetHealthPred(minion)
-                    local wDamage = Kaisa.GetDamage(minion, slots.W)
-                    local healthPredBaronW = spells.W:GetHealthPred(minion)
-                    if not minion.IsDead and minion.IsBaron or minion.IsHerald and minion:Distance(enemy) < 1800 or enemy.IsInBaronPit then
-                        if OriUtils.CanCastSpell(slots.Q, "steal.useQ") then
-                            if OriUtils.IsValidTarget(minion, spells.Q.Range) then
-                                if Kaisa.QEvolved() then
-                                    if Kaisa.qCases() == 0 then
-                                        if healthPredBaronQ > 0 and healthPredBaronQ < floor(qDamage + ((qDamage / 4) * 11)) then
-                                            if not Orbwalker.IsWindingUp() then
-                                                if spells.Q:Cast() then
-                                                    return
-                                                end
-                                            end
-                                        end
-                                    elseif Kaisa.qCases() == 1 then
-                                        if healthPredBaronQ > 0 and healthPredBaronQ < floor(qDamage + ((qDamage / 4) * 5)) then
-                                            if not Orbwalker.IsWindingUp() then
-                                                if spells.Q:Cast() then
-                                                    return
-                                                end
-                                            end
-                                        end
-                                    elseif Kaisa.qCases() == 2 then
-                                        if healthPredBaronQ > 0 and healthPredBaronQ < floor(qDamage + ((qDamage / 4) * 3)) then
-                                            if not Orbwalker.IsWindingUp() then
-                                                if spells.Q:Cast() then
-                                                    return
-                                                end
-                                            end
-                                        end
-                                    elseif Kaisa.qCases() == 3 then
-                                        if healthPredBaronQ > 0 and healthPredBaronQ < floor(qDamage + ((qDamage / 4) * 2)) then
-                                            if not Orbwalker.IsWindingUp() then
-                                                if spells.Q:Cast() then
-                                                    return
-                                                end
-                                            end
-                                        end
-                                    elseif Kaisa.qCases() == 4 or Kaisa.qCases() == 5 then
-                                        if healthPredBaronQ > 0 and healthPredBaronQ < floor(qDamage + ((qDamage / 4) * 1)) then
-                                            if not Orbwalker.IsWindingUp() then
-                                                if spells.Q:Cast() then
-                                                    return
-                                                end
-                                            end
+                    if minion.IsBaron then
+                        if qEvolved then
+                            if qCases == 0 then
+                                if healthPredBaronQ > 0 and healthPredBaronQ < floor(qDamage + ((qDamage / 4) * 11)) then
+                                    if not IsWindingUp then
+                                        if spells.Q:Cast() then
+                                            return
                                         end
                                     end
-                                else
-                                    if Kaisa.qCases() == 0 then
-                                        if healthPredBaronQ > 0 and healthPredBaronQ < floor(qDamage + ((qDamage / 4) * 5)) then
-                                            if not Orbwalker.IsWindingUp() then
-                                                if spells.Q:Cast() then
-                                                    return
-                                                end
-                                            end
+                                end
+                            elseif qCases == 1 then
+                                if healthPredBaronQ > 0 and healthPredBaronQ < floor(qDamage + ((qDamage / 4) * 5)) then
+                                    if not IsWindingUp then
+                                        if spells.Q:Cast() then
+                                            return
                                         end
-                                    elseif Kaisa.qCases() == 1 then
-                                        if healthPredBaronQ > 0 and healthPredBaronQ < floor(qDamage + ((qDamage / 4) * 2)) then
-                                            if not Orbwalker.IsWindingUp() then
-                                                if spells.Q:Cast() then
-                                                    return
-                                                end
-                                            end
+                                    end
+                                end
+                            elseif qCases == 2 then
+                                if healthPredBaronQ > 0 and healthPredBaronQ < floor(qDamage + ((qDamage / 4) * 3)) then
+                                    if not IsWindingUp then
+                                        if spells.Q:Cast() then
+                                            return
                                         end
-                                    elseif Kaisa.qCases() == 2 or Kaisa.qCases() == 3 or Kaisa.qCases() == 4 then
-                                        if healthPredBaronQ > 0 and healthPredBaronQ < floor(qDamage + ((qDamage / 4) * 1)) then
-                                            if not Orbwalker.IsWindingUp() then
-                                                if spells.Q:Cast() then
-                                                    return
-                                                end
-                                            end
+                                    end
+                                end
+                            elseif qCases == 3 then
+                                if healthPredBaronQ > 0 and healthPredBaronQ < floor(qDamage + ((qDamage / 4) * 2)) then
+                                    if not IsWindingUp then
+                                        if spells.Q:Cast() then
+                                            return
+                                        end
+                                    end
+                                end
+                            elseif qCases == 4 or qCases == 5 then
+                                if healthPredBaronQ > 0 and healthPredBaronQ < floor(qDamage + ((qDamage / 4) * 1)) then
+                                    if not IsWindingUp then
+                                        if spells.Q:Cast() then
+                                            return
                                         end
                                     end
                                 end
                             end
-                        end
-                        if OriUtils.CanCastSpell(slots.W, "steal.useW") then
-                            if OriUtils.IsValidTarget(minion, spells.W.Range) then
-                                local missingHP = minion.MaxHealth - minion.Health
-                                local passiveDamage = (0.15 + 0.025) * missingHP
-                                INFO(wDamage + passiveDamage)
-                                if wDamage + passiveDamage > 400 then
-                                    wDamage = 400
-                                    passiveDamage = 0
-                                end
-                                INFO(wDamage + passiveDamage)
-                                if minion:GetBuff("kaisapassivemarker") and (minion:GetBuff("kaisapassivemarker").Count >= 3 or Kaisa.WEvolved() and minion:GetBuff("kaisapassivemarker").Count >= 2) then
-                                    
-                                    if healthPredBaronW > 0 and healthPredBaronW < floor(wDamage + passiveDamage - 50) then
-                                        if not Orbwalker.IsWindingUp() then
-                                            if spells.W:CastOnHitChance(minion, Enums.HitChance.Medium) then
-                                                return
-                                            end
+                        else
+                            if qCases == 0 then
+                                if healthPredBaronQ > 0 and healthPredBaronQ < floor(qDamage + ((qDamage / 4) * 5)) then
+                                    if not IsWindingUp then
+                                        if spells.Q:Cast() then
+                                            return
                                         end
                                     end
-                                else
-                                    if healthPredBaronW > 0 and healthPredBaronW < floor(wDamage - 50) then
-                                        if not Orbwalker.IsWindingUp() then
-                                            if spells.W:CastOnHitChance(minion, Enums.HitChance.Medium) then
-                                                return
-                                            end
+                                end
+                            elseif qCases == 1 then
+                                if healthPredBaronQ > 0 and healthPredBaronQ < floor(qDamage + ((qDamage / 4) * 2)) then
+                                    if not IsWindingUp then
+                                        if spells.Q:Cast() then
+                                            return
+                                        end
+                                    end
+                                end
+                            elseif qCases == 2 or qCases == 3 or qCases == 4 then
+                                if healthPredBaronQ > 0 and healthPredBaronQ < floor(qDamage + ((qDamage / 4) * 1)) then
+                                    if not IsWindingUp then
+                                        if spells.Q:Cast() then
+                                            return
                                         end
                                     end
                                 end
@@ -802,8 +785,48 @@ function Kaisa.BaronSteal()
             end
         end
     end
-end
 
+    if OriUtils.CanCastSpell(slots.W, "steal.useW") then 
+        local heroCheck = TS:GetTarget(1500)
+        local nearbyMinions = ObjManager.GetNearby("neutral", "minions")
+        local wEvolved = Kaisa.WEvolved()
+        local IsWindingUp = Orbwalker.IsWindingUp()
+        if heroCheck then
+            for iM, minion in ipairs(nearbyMinions) do
+                local minion = minion.AsMinion
+                if OriUtils.IsValidTarget(minion, spells.W.Range) then
+                    local wDamage = Kaisa.GetDamage(minion, slots.W)
+                    local healthPredBaronW = spells.W:GetHealthPred(minion)
+                    local missingHP = minion.MaxHealth - minion.Health
+                    local passiveDamage = (0.15 + 0.025) * missingHP
+                    if wDamage + passiveDamage > 400 then
+                        wDamage = 400
+                        passiveDamage = 0
+                    end
+                    if minion.IsBaron then
+                        if minion:GetBuff("kaisapassivemarker") and (minion:GetBuff("kaisapassivemarker").Count >= 3 or wEvolved and minion:GetBuff("kaisapassivemarker").Count >= 2) then
+                            if healthPredBaronW > 0 and healthPredBaronW < floor(wDamage + passiveDamage - 50) then
+                                if not IsWindingUp then
+                                    if spells.W:CastOnHitChance(minion, Enums.HitChance.Low) then
+                                        return
+                                    end
+                                end
+                            end
+                        else
+                            if healthPredBaronW > 0 and healthPredBaronW < floor(wDamage - 50) then
+                                if not IsWindingUp then
+                                    if spells.W:CastOnHitChance(minion, Enums.HitChance.Low) then
+                                        return
+                                    end
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+end
 
 Kaisa.LatestR = 0
 
@@ -881,7 +904,7 @@ end
                     local target = v.AsHero
                     if target:GetBuff("kaisapassivemarkerr") then
                         local endPos = target.ServerPos:Extended(mousePos, 525)
-                        if not Orbwalker.IsWindingUp() then
+                        if not IsWindingUp then
                             if spells.R:Cast(endPos) then
                                 return
                             end
@@ -892,6 +915,30 @@ end
         end
     end
 end]]--
+
+function Kaisa.AutoQ()
+    if spells.Q:IsReady() and OriUtils.MGet("misc.autoQ.options") == 1 or OriUtils.MGet("misc.autoQ.options") == 2 then
+        local qTarget = spells.Q:GetTarget()
+        local IsWindingUp = Orbwalker.IsWindingUp()
+        if qTarget then
+            if OriUtils.MGet("misc.autoQ.options") == 2 then
+                if Kaisa.QEvolved() then
+                    if Kaisa.QCount() <= OriUtils.MGet("misc.autoQ.MinionsEvolved") and not IsWindingUp then
+                        if spells.Q:Cast() then
+                            return
+                        end
+                    end
+                end
+            elseif OriUtils.MGet("misc.autoQ.options") == 1 then
+                if Kaisa.QCount() <= OriUtils.MGet("misc.autoQ.Minions") and not IsWindingUp then
+                    if spells.Q:Cast() then
+                        return
+                    end
+                end
+            end
+        end
+    end
+end
 
 function Kaisa.WToggle()
     if spells.W:IsReady() then
@@ -934,27 +981,36 @@ function combatVariants.Combo()
     if OriUtils.CanCastSpell(slots.R, "combo.useR") then
         local mousePos = Renderer.GetMousePos()
         local markedEnemy = ObjManager.Get("enemy", "heroes")
+        local rEnemyHP = OriUtils.MGet("combo.rEnemyHP")
+        local rSelfHP = OriUtils.MGet("combo.rSelfHP")
+        local IsWindingUp = Orbwalker.IsWindingUp()
+        local rOption0 = OriUtils.MGet("combo.useR.options") == 0
+        local rOption1 = OriUtils.MGet("combo.useR.options") == 1
         ---@param objA GameObject
         ---@param objB GameObject
         local function enemyComparator(objA, objB)
             return mousePos:Distance(objA) < mousePos:Distance(objB)
         end
-
     sort(markedEnemy, enemyComparator)
         for kR, vR in pairs(markedEnemy) do
             if OriUtils.IsValidTarget(vR, 650) then
                 local target = vR.AsHero
                 if target:GetBuff("kaisapassivemarkerr") then
-                    if target.HealthPercent * 100 <= OriUtils.MGet("combo.rEnemyHP") and Player.HealthPercent * 100 <= OriUtils.MGet("combo.rSelfHP") then
-                        if Player.ManaPercent * 100 < 100 then
-                            local mousePos = Renderer.GetMousePos()
+                    if target.HealthPercent * 100 >= rEnemyHP and Player.HealthPercent * 100 <= rSelfHP then
+                        --if Player.ManaPercent * 100 < 100 then
                             local endPos = target.ServerPos:Extended(mousePos, 525)
-                            if not Orbwalker.IsWindingUp() then
-                                if spells.R:Cast(endPos) then
-                                    return
+                            if not IsWindingUp then
+                                if rOption1 then
+                                    if spells.R:Cast(endPos) then
+                                        return
+                                    end
+                                else
+                                    if spells.R:Cast(Player.Position) then
+                                        return
+                                    end
                                 end
                             end
-                        end
+                        --end
                     end
                 end
             end
@@ -964,14 +1020,14 @@ function combatVariants.Combo()
     if OriUtils.CanCastSpell(slots.W, "combo.useW") then
         if Player.ManaPercent * 100 >= OriUtils.MGet("combo.wManaSlider") then
             local enemiesW = TS:GetTargets(1500)
-            
+            local IsWindingUp = Orbwalker.IsWindingUp()
             for i, obj in ipairs(enemiesW) do
                 local enemy = obj.AsHero
                 local passiveStack = enemy:GetBuff("kaisapassivemarker") and enemy:GetBuff("kaisapassivemarker").Count or 0
                 if passiveStack >= OriUtils.MGet("combo.wPassiveCount") then
                     local wRange = OriUtils.MGet("misc.WRange")
                     local wTarget = TS:GetTarget(wRange, false)
-                    if wTarget and not Orbwalker.IsWindingUp() then
+                    if wTarget and not IsWindingUp then
                         if spells.W:CastOnHitChance(enemy, OriUtils.MGet("hc.W") / 100) then
                             return
                         end
@@ -983,9 +1039,10 @@ function combatVariants.Combo()
 
     if OriUtils.CanCastSpell(slots.Q, "combo.useQ") then
         local qTarget = spells.Q:GetTarget()
+        local IsWindingUp = Orbwalker.IsWindingUp()
         if OriUtils.MGet("combo.qMinionCountDouble") and Kaisa.QEvolved() then
             if qTarget and Kaisa.QCount() < (OriUtils.MGet("combo.qMinionCount") * 2) then
-                if not Orbwalker.IsWindingUp() then
+                if not IsWindingUp then
                     if spells.Q:Cast() then
                         return
                     end
@@ -993,7 +1050,7 @@ function combatVariants.Combo()
             end
         else
             if qTarget and Kaisa.QCount() < OriUtils.MGet("combo.qMinionCount") then
-                if not Orbwalker.IsWindingUp() then
+                if not IsWindingUp then
                     if spells.Q:Cast() then
                         return
                     end
@@ -1005,23 +1062,37 @@ function combatVariants.Combo()
     if OriUtils.CanCastSpell(slots.E, "combo.useE") then
         local eRange = Orbwalker.GetTrueAutoAttackRange(Player)
         local eTarget = TS:GetTarget(eRange - 30)
-        if eTarget then
-            if not Orbwalker.IsWindingUp() then
-                if spells.E:Cast() then
-                    return
+        local IsWindingUp = Orbwalker.IsWindingUp()
+        if OriUtils.MGet("combo.useE.options") == 1 then
+            if eTarget then
+                if not IsWindingUp then
+                    if spells.E:Cast() then
+                        return
+                    end
                 end
             end
-        end
+        elseif OriUtils.MGet("combo.useE.options") == 2 then
+            if Kaisa.EEvolved() then
+                if eTarget then
+                    if not IsWindingUp then
+                        if spells.E:Cast() then
+                            return
+                        end
+                    end
+                end
+            end
+        end                
     end
     
     if OriUtils.MGet("combo.eEngage.options") == 1 then
         local eRange = OriUtils.MGet("combo.ESlider")
         local engangeEnemyE1 = ObjManager.GetNearby("enemy", "heroes")
+        local IsWindingUp = Orbwalker.IsWindingUp()
         for iE, objE in ipairs(engangeEnemyE1) do
             local target = objE.AsHero
             if OriUtils.IsValidTarget(target, eRange) then
                 if Player:Distance(target) > Orbwalker.GetTrueAutoAttackRange(Player) then
-                    if not Orbwalker.IsWindingUp() then
+                    if not IsWindingUp then
                         if spells.E:Cast() then
                             return
                         end
@@ -1032,12 +1103,13 @@ function combatVariants.Combo()
     elseif OriUtils.MGet("combo.eEngage.options") == 2 then
         local eRange = OriUtils.MGet("combo.ESlider")
         local engangeEnemyE2 = ObjManager.GetNearby("enemy", "heroes")
+        local IsWindingUp = Orbwalker.IsWindingUp()
         if Kaisa.EEvolved() then
             for iE, objE in ipairs(engangeEnemyE2) do
                 local target = objE.AsHero
                 if OriUtils.IsValidTarget(target, eRange) then
                     if Player:Distance(target) > Orbwalker.GetTrueAutoAttackRange(Player) then
-                        if not Orbwalker.IsWindingUp() then
+                        if not IsWindingUp then
                             if spells.E:Cast() then
                                 return
                             end
@@ -1053,8 +1125,9 @@ function combatVariants.Harass()
 
     if OriUtils.CanCastSpell(slots.Q, "harass.useQ") then
         local qTarget = spells.Q:GetTarget()
+        local IsWindingUp = Orbwalker.IsWindingUp()
         if qTarget then
-            if not Orbwalker.IsWindingUp() then
+            if not IsWindingUp then
                 if spells.Q:Cast() then
                     return
                 end
@@ -1064,8 +1137,9 @@ function combatVariants.Harass()
 
     if OriUtils.CanCastSpell(slots.W, "harass.useW") then
         local wTarget = spells.W:GetTarget()
+        local IsWindingUp = Orbwalker.IsWindingUp()
         if wTarget then
-            if not Orbwalker.IsWindingUp() then
+            if not IsWindingUp then
                 if spells.W:CastOnHitChance(wTarget, OriUtils.MGet("hc.WC") / 100) then
                     return
                 end
@@ -1079,13 +1153,15 @@ function combatVariants.Waveclear()
     if OriUtils.CanCastSpell(slots.Q, "jglclear.useQ") then
         if Player.ManaPercent * 100 >= OriUtils.MGet("jglclear.QManaSlider") then
             local jglminionsQ = ObjManager.GetNearby("neutral", "minions")
+            local IsWindingUp = Orbwalker.IsWindingUp()
+            local qDrake = OriUtils.MGet("jgl.qDrake")
             for iJGLQ, objJGLQ in ipairs(jglminionsQ) do
                 if OriUtils.IsValidTarget(objJGLQ, spells.Q.Range) then
                     local minionName = objJGLQ.CharName
                     local aaDamage = Orbwalker.GetAutoAttackDamage(objJGLQ)
-                    if OriUtils.MGet("jgl.qWL." .. minionName, true) or objJGLQ.IsDragon and OriUtils.MGet("jgl.qDrake") then
+                    if OriUtils.MGet("jgl.qWL." .. minionName, true) or objJGLQ.IsDragon and qDrake then
                         if objJGLQ.Health > (aaDamage * 2) then
-                            if not Orbwalker.IsWindingUp() then
+                            if not IsWindingUp then
                                 if spells.Q:Cast() then
                                     return
                                 end
@@ -1100,14 +1176,16 @@ function combatVariants.Waveclear()
     if OriUtils.CanCastSpell(slots.W, "jglclear.useW") then
         if Player.ManaPercent * 100 >= OriUtils.MGet("jglclear.WManaSlider") then
             local jglminionsW = ObjManager.GetNearby("neutral", "minions")
+            local IsWindingUp = Orbwalker.IsWindingUp()
+            local wDrake = OriUtils.MGet("jgl.wDrake")
             for iJGLW, objJGLW in ipairs(jglminionsW) do
                 if OriUtils.IsValidTarget(objJGLW, 700) then
                     local minionName = objJGLW.CharName
-                    if OriUtils.MGet("jgl.wWL." .. minionName, true) or objJGLW.IsDragon and OriUtils.MGet("jgl.wDrake") then
+                    if OriUtils.MGet("jgl.wWL." .. minionName, true) or objJGLW.IsDragon and wDrake then
                         local jglStacks = objJGLW:GetBuff("kaisapassivemarker") and objJGLW:GetBuff("kaisapassivemarker").Count or 0
                         local aaDamage = Orbwalker.GetAutoAttackDamage(objJGLW)
                         if jglStacks >= OriUtils.MGet("jglclear.Stacks") and objJGLW.Health > (aaDamage * 2) then
-                            if not Orbwalker.IsWindingUp() then
+                            if not IsWindingUp then
                                 if spells.W:Cast(objJGLW) then
                                     return
                                 end
@@ -1121,13 +1199,15 @@ function combatVariants.Waveclear()
     if OriUtils.CanCastSpell(slots.E, "jglclear.useE") then
         if Player.ManaPercent * 100 >= OriUtils.MGet("jglclear.EManaSlider") then
             local jglminionsE = ObjManager.GetNearby("neutral", "minions")
+            local IsWindingUp = Orbwalker.IsWindingUp()
+            local eDrake = OriUtils.MGet("jgl.eDrake")
             for iJGLE, objJGLE in ipairs(jglminionsE) do
                 if OriUtils.IsValidTarget(objJGLE, 700) then
                     local minionName = objJGLE.CharName
-                    if OriUtils.MGet("jgl.eWL." .. minionName, true) or objJGLE.IsDragon and OriUtils.MGet("jgl.eDrake") then
+                    if OriUtils.MGet("jgl.eWL." .. minionName, true) or objJGLE.IsDragon and eDrake then
                         local aaDamage = Orbwalker.GetAutoAttackDamage(objJGLE)
                         if objJGLE.Health > (aaDamage * 2) then
-                            if not Orbwalker.IsWindingUp() then
+                            if not IsWindingUp then
                                 if spells.E:Cast() then
                                     return
                                 end
@@ -1145,11 +1225,12 @@ function combatVariants.Waveclear()
 
     if OriUtils.CanCastSpell(slots.Q, "clear.useQ") then
         local minionsQ = ObjManager.GetNearby("enemy", "minions")
+        local IsWindingUp = Orbwalker.IsWindingUp()
         for iclearQ, objclearQ in ipairs(minionsQ) do
             if OriUtils.IsValidTarget(objclearQ, spells.Q.Range) then
                 if Orbwalker.IsFastClearEnabled() then
                     if Kaisa.QCount() >= 1 then
-                        if not Orbwalker.IsWindingUp() then
+                        if not IsWindingUp then
                             if spells.Q:Cast() then
                                 return
                             end
@@ -1158,7 +1239,7 @@ function combatVariants.Waveclear()
                 else
                     if Kaisa.QCount() >= OriUtils.MGet("clear.qMinions") then
                         if Player.ManaPercent * 100 >= OriUtils.MGet("clear.qManaSlider") then
-                            if not Orbwalker.IsWindingUp() then
+                            if not IsWindingUp then
                                 if spells.Q:Cast() then
                                     return
                                 end
@@ -1172,9 +1253,10 @@ function combatVariants.Waveclear()
 
     if OriUtils.CanCastSpell(slots.E, "clear.useE") and Orbwalker.IsFastClearEnabled() then
         local minionE = ObjManager.GetNearby("enemy", "minions")
+        local IsWindingUp = Orbwalker.IsWindingUp()
         for iclearE, objclearE in ipairs(minionE) do
             if OriUtils.IsValidTarget(objclearE, 700) then
-                if not Orbwalker.IsWindingUp() then
+                if not IsWindingUp then
                     if spells.E:Cast() then
                         return
                     end
@@ -1185,11 +1267,12 @@ function combatVariants.Waveclear()
 
     if OriUtils.CanCastSpell(slots.W, "clear.useW") and Orbwalker.IsFastClearEnabled() then
         local minionW = ObjManager.GetNearby("enemy", "minions")
+        local IsWindingUp = Orbwalker.IsWindingUp()
         for iclearW, objclearW in ipairs(minionW) do
             if OriUtils.IsValidTarget(objclearW, 700) then
                 local aaDamage = Orbwalker.GetAutoAttackDamage(objclearW)
                 if objclearW.Health > (aaDamage * 2) then
-                    if not Orbwalker.IsWindingUp() then
+                    if not IsWindingUp then
                         if spells.W:Cast(objclearW) then
                             return
                         end
@@ -1218,19 +1301,12 @@ function events.OnTick()
     if not OriUtils.ShouldRunLogic() then
         return
     end
-    local OrbwalkerState = Orbwalker.GetMode()
-    if OrbwalkerState == "Combo" then
-        combatVariants.Combo()
-    elseif OrbwalkerState == "Harass" then
-        combatVariants.Harass()
-    elseif OrbwalkerState == "Waveclear" then
-        combatVariants.Waveclear()
-    elseif OrbwalkerState == "Lasthit" then
-        combatVariants.Lasthit()
-    elseif OrbwalkerState == "Flee" then
-        combatVariants.Flee()
+    local modeToExecute = combatVariants[Orbwalker.GetMode()]
+    if modeToExecute then
+        modeToExecute()
     end
 
+    Kaisa.AutoQ()
     Kaisa.BaronSteal()
     Kaisa.DrakeSteal()
     Kaisa.KS()
@@ -1333,7 +1409,10 @@ function events.OnDraw()
 
     if OriUtils.MGet("misc.wToggle") then
         return Renderer.DrawTextOnPlayer("Auto W Harass: ACTIVE", 0xFF00FFFF)
-    else
+    end
+
+    if OriUtils.MGet("misc.autoQ.options") == 1 or OriUtils.MGet("misc.autoQ.options") == 2 and Kaisa.QEvolved() then
+        return Renderer.DrawTextOnPlayer("Auto Q: ACTIVE", 0xFFFF00FF)
     end
 end
 
@@ -1424,18 +1503,21 @@ function Kaisa.InitMenu()
             Menu.ColoredText("If you find any, please contact " .. scriptCreator, 0xFF0000FF, true)
         end
         
-        if Menu.Checkbox("Kaisa.Updates100", "Don't show updates") == false then
+        if Menu.Checkbox("Kaisa.Updates141", "Don't show updates") == false then
             Menu.Separator()
             Menu.ColoredText("*** UPDATE " .. scriptLastUpdated .. " ***", scriptColor, true)
             Menu.Separator()
             Menu.ColoredText(patchNotesVersion, 0XFFFF00FF, true)
-            Menu.Text("- Initital Release of AuKaisa 1.0.0", true)
+            Menu.Text("- Code Rework", true)
+            Menu.Text("- Added different E Modes inside AA Range (Never, Always, Only Evolved)", true)
+            Menu.Text("- Added R Positions (MousePos and On Spot)", true)
+            Menu.Text("- Changed enemy R value to 'above' instead of 'below'", true)
+            Menu.Text("- Added Auto Q Options (Never, Always, Only Evolved) inside Misc", true)
             Menu.Separator()
             Menu.ColoredText("*** UPDATE " .. patchNotesPrevUpdate .. " ***", scriptColor, true)
             Menu.Separator()
             Menu.ColoredText(patchNotesPreVersion, 0XFFFF00FF, true)
-            Menu.Text("- XXXXXXXXXXXXXXX", true)
-
+            Menu.Text("- Initital Release of AuKaisa 1.0.0", true)
         end
 
         Menu.Separator()
@@ -1451,6 +1533,7 @@ function Kaisa.InitMenu()
                 Menu.Text("")
                 EHeader()
                 Menu.Checkbox("Kaisa.combo.useE", "Enable E", true)
+                Menu.Dropdown("Kaisa.combo.useE.options", "E in AA Range", 1, {"Never", "Always", "Use only Evolved E"})
                 Menu.Dropdown("Kaisa.combo.eEngage.options", "Engage Mode", 2, {"Never", "Use E To Engage", "Use only Evolved E to Engage"})
                 local ddResultE = OriUtils.MGet("combo.eEngage.options") == 0
                 if not ddResultE then
@@ -1469,8 +1552,9 @@ function Kaisa.InitMenu()
                 Menu.NextColumn()
                 RHeader()
                 Menu.Checkbox("Kaisa.combo.useR", "Enable R", true)
+                Menu.Dropdown("Kaisa.combo.useR.options", "Position", 1, {"On Spot", "On MousePos"})
                 Menu.Slider("Kaisa.combo.rSelfHP", "If own HP below X%", 25, 1, 100, 1)
-                Menu.Slider("Kaisa.combo.rEnemyHP", "and if Enemy HP below X%", 35, 1, 100, 1)
+                Menu.Slider("Kaisa.combo.rEnemyHP", "and if Enemy HP above X%", 40, 1, 100, 1)
                 Menu.ColoredText("Will only cast R inside AA Range, for longer ranges use Force R", scriptColor, true)
             end)
         end)
@@ -1635,7 +1719,19 @@ function Kaisa.InitMenu()
         Menu.Separator()
 
         Menu.NewTree("Kaisa.miscMenu", "Misc Settings", function()
-            Menu.ColumnLayout("Kaisa.miscMenu.R", "Kaisa.miscMenu.R", 2, true, function()
+            Menu.ColumnLayout("Kaisa.miscMenu.R", "Kaisa.miscMenu.R", 3, true, function()
+                Menu.Text("")
+                QHeader()
+                Menu.Dropdown("Kaisa.misc.autoQ.options", "Auto Q", 0, {"Never", "Always", "Only if evolved"})
+                local ddResultQ1 = OriUtils.MGet("misc.autoQ.options") == 1
+                local ddResultQ2 = OriUtils.MGet("misc.autoQ.options") == 2
+                if ddResultQ1 then
+                    Menu.Slider("Kaisa.misc.autoQ.Minions", "<= than X Minions", 1, 0, 5)
+                end
+                if ddResultQ2 then
+                    Menu.Slider("Kaisa.misc.autoQ.MinionsEvolved", "<= than X Minions", 6, 0, 11)
+                end
+                Menu.NextColumn()
                 Menu.Text("")
                 EHeader()
                 Menu.Checkbox("Kaisa.misc.fleeE", "Flee E", true)
