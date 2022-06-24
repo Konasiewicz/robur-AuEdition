@@ -4,7 +4,7 @@ local scriptName = "AuSona"
 local scriptCreator = "AURUM"
 local credits = "Orietto"
 local patchNotesPrevUpdate = "11/20/2021"
-local patchNotesPreVersion, patchNotesVersion, scriptVersionUpdater = "1.0.5", "1.0.6", "1.0.6"
+local patchNotesPreVersion, patchNotesVersion, scriptVersionUpdater = "1.0.5", "1.0.7", "1.0.7"
 local scriptVersion = scriptVersionUpdater
 local scriptLastUpdated = "02/19/2022"
 local scriptIsBeta = false
@@ -26,7 +26,7 @@ local huge, pow, min, max = math.huge, math.pow, math.min, math.max
 
 local SDK = _G.CoreEx
 
-SDK.AutoUpdate("https://github.com/roburAURUM/robur-AuEdition/raw/main/AuSona.lua", scriptVersionUpdater)
+SDK.AutoUpdate("https://raw.githubusercontent.com/roburAURUM/robur-AuEdition/main/AuSona.lua", scriptVersionUpdater)
 
 local ObjManager = SDK.ObjectManager
 local EventManager = SDK.EventManager
