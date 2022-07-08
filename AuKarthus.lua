@@ -5,7 +5,7 @@ local scriptCreator = "AURUM"
 local credits = "Orietto"
 local patchNotesPrevUpdate = "01/05/2022"
 local patchNotesPreVersion = "1.0.5"
-local patchNotesVersion, scriptVersionUpdater = "1.0.7", "1.0.7"
+local patchNotesVersion, scriptVersionUpdater = "1.0.7", "1.0.8"
 local scriptVersion = scriptVersionUpdater
 local scriptLastUpdated = "06/05/2022"
 local scriptIsBeta = false
@@ -286,8 +286,6 @@ function OriUtils.AddDrawMenu(data)
             Menu.ColorPicker(cacheName .. ".draw." .. id .. ".color", "Color", scriptColor)
         end)
     end
-
-    Menu.Separator()
 
     Menu.Checkbox(cacheName .. ".draw." .. "comboDamage", "Draw combo damage on healthbar", true)
     Menu.Checkbox("Karthus.drawMenu.addRDamage", "Include R Damage", true)
@@ -926,73 +924,29 @@ function Karthus.InitMenu()
     end
 
     local function KarthusMenu()
-        Menu.Text("" .. ASCIIArt, true)
-        Menu.Text("" .. ASCIIArt2, true)
-        Menu.Text("" .. ASCIIArt3, true)
-        Menu.Text("" .. ASCIIArt4, true)
-        Menu.Text("" .. ASCIIArt5, true)
-        Menu.Text("", true)
-        Menu.Separator()
-        Menu.Text("", true)
-        Menu.Text("Version:", true) Menu.SameLine()
-        Menu.ColoredText(scriptVersion, scriptColor, false)
-        Menu.Text("Last Updated:", true) Menu.SameLine()
-        Menu.ColoredText(scriptLastUpdated, scriptColor, false)
-        Menu.Text("Creator:", true) Menu.SameLine()
-        Menu.ColoredText(scriptCreator, 0x6EFF26FF, false)
-        Menu.Text("Credits to:", true) Menu.SameLine()
-        Menu.ColoredText(credits, 0x6EFF26FF, false)
-
-        if scriptIsBeta then
-            Menu.ColoredText("This script is in an early stage , which means you'll have to redownload the final version once it's done!", 0xFFFF00FF, true)
-            Menu.ColoredText("Please keep in mind, that you might encounter bugs/issues.", 0xFFFF00FF, true)
-            Menu.ColoredText("If you find any, please contact " .. scriptCreator .. " via robur.lol", 0xFF0000FF, true)
-        end
-        
-        if Menu.Checkbox("Karthus.Updates105", "Don't show updates") == false then
-            Menu.Separator()
-            Menu.ColoredText("*** UPDATE " .. scriptLastUpdated .. " ***", scriptColor, true)
-            Menu.Separator()
-            Menu.ColoredText(patchNotesVersion, 0XFFFF00FF, true)
-            Menu.Text("- Added Lasthit Q", true)
-            Menu.Separator()
-            Menu.ColoredText("*** UPDATE " .. patchNotesPrevUpdate .. " ***", scriptColor, true)
-            Menu.Separator()
-            Menu.ColoredText(patchNotesPreVersion, 0XFFFF00FF, true)
-            Menu.Text("- Initial Release of AuKarthus 1.0.0", true)
-        end
-
-        Menu.Separator()
-
         Menu.NewTree("Karthus.comboMenu", "Combo Settings", function()
             Menu.ColumnLayout("Karthus.comboMenu.QE", "Karthus.comboMenu.QE", 3, true, function()
-                Menu.Text("")
                 QHeader()
                 Menu.Checkbox("Karthus.combo.useQ", "Enable Q", true)
                 Menu.Slider("Karthus.combo.QManaSlider", "Don't use if Mana < %", 5, 1, 100, 1)
                 Menu.NextColumn()
-                Menu.Text("")
                 WHeader()
                 Menu.Checkbox("Karthus.combo.useW", "Enable W", true)
                 Menu.Slider("Karthus.combo.WManaSlider", "Don't use if Mana < %", 10, 1, 100, 1)
                 Menu.NextColumn()
-                Menu.Text("")
                 EHeader()
                 Menu.Checkbox("Karthus.combo.useE", "Enable E", true)
                 Menu.Slider("Karthus.combo.EManaSlider", "Don't use if Mana < %", 35, 1, 100, 1)
             end)
         end)
-        Menu.Separator()
 
         Menu.NewTree("Karthus.harassMenu", "Harass Settings", function()
             Menu.ColumnLayout("Karthus.harassMenu.Q", "Karthus.harassMenu.Q", 1, true, function()
-                Menu.Text("")
                 QHeader()
                 Menu.Checkbox("Karthus.harass.useQ", "Enable Q", true)
             end)
 
         end)
-        Menu.Separator()
 
         Menu.NewTree("Karthus.clearMenu", "Clear Settings", function()
             Menu.NewTree("Karthus.waveMenu", "Waveclear", function()
@@ -1028,7 +982,6 @@ function Karthus.InitMenu()
                     end)
                 end)
                 Menu.Slider("Karthus.jglclear.QManaSlider", "Don't use if Mana < %", 35, 1, 100, 1)
-                Menu.Separator()
                 Menu.Checkbox("Karthus.jglclear.useE", "Use E", true)
                 Menu.ColumnLayout("Karthus.jglclear.eWhitelist", "Karthus.jglclear.eWhitelist", 3, true, function()
                     Menu.Indent(function()
@@ -1056,17 +1009,12 @@ function Karthus.InitMenu()
             end)
         end)
 
-        Menu.Separator()
-
         Menu.NewTree("Karthus.lasthitMenu", "Lasthit Settings", function()
             Menu.ColumnLayout("Karthus.lasthitMenu.Q", "Karthus.lasthitMenu.Q", 1, true, function()
-                Menu.Text("")
                 QHeader()
                 Menu.Checkbox("Karthus.lasthit.useQ", "Enable Q", true)
             end)
         end)
-
-        Menu.Separator()
 
         Menu.NewTree("Karthus.stealMenu", "Steal Settings", function()
             Menu.NewTree("Karthus.ksMenu", "Killsteal", function()
@@ -1119,7 +1067,6 @@ function Karthus.InitMenu()
                 Menu.Checkbox("Karthus.steal.useQ", "Junglesteal with Q", true)
             end)
         end)
-        Menu.Separator()
 
         Menu.NewTree("Karthus.miscMenu", "Misc Settings", function()
             Menu.ColumnLayout("Karthus.miscMenu.R", "Karthus.miscMenu.R", 3, true, function()
@@ -1151,28 +1098,21 @@ function Karthus.InitMenu()
                     end)
                 end
                 Menu.NextColumn()
-                Menu.Text("")
                 RHeader()
                 Menu.Keybind("Karthus.misc.forceR", "Force R", string.byte("T"), false, false, true)
                 Menu.Checkbox("Karthus.misc.canKill", "Show if Champion can be killed", true)
             end)
         end)
-        Menu.Separator()
 
         Menu.NewTree("Karthus.hcMenu", "Hitchance Settings", function()
             Menu.ColumnLayout("Karthus.hcMenu.QW", "Karthus.hcMenu.QW", 2, true, function()
-                Menu.Text("")
                 QHeaderHit()
-                Menu.Text("")
                 Menu.Slider("Karthus.hc.Q", "%", 20, 1, 100, 1)
                 Menu.NextColumn()
-                Menu.Text("")
                 WHeaderHit()
-                Menu.Text("")
                 Menu.Slider("Karthus.hc.W", "%", 10, 1, 100, 1)
             end)
         end)
-        Menu.Separator()
 
         Menu.NewTree("Karthus.drawMenu", "Draw Settings", function()
             OriUtils.AddDrawMenu(drawData)
