@@ -5,7 +5,7 @@ local scriptName = "AuNami"
 local scriptCreator = "AURUM"
 local credits = "Orietto & Thorn"
 local patchNotesPrevUpdate = "11/27/2021"
-local patchNotesPreVersion, patchNotesVersion, scriptVersionUpdater = "1.2.5", "1.2.7", "1.2.7"
+local patchNotesPreVersion, patchNotesVersion, scriptVersionUpdater = "1.2.5", "1.2.8", "1.2.8"
 local scriptVersion = scriptVersionUpdater
 local scriptLastUpdated = "2/18/2022"
 local scriptIsBeta = false
@@ -199,8 +199,6 @@ function OriUtils.AddDrawMenu(data)
             Menu.ColorPicker(cacheName .. ".draw." .. id .. ".color", "Color", scriptColor)
         end)
     end
-
-    Menu.Separator()
 
     Menu.Checkbox(cacheName .. ".draw." .. "comboDamage", "Draw combo damage on healthbar", false)
     Menu.Checkbox("Nami.drawMenu.AlwaysDraw", "Always show Drawings", false)
@@ -792,54 +790,10 @@ function Nami.InitMenu()
     end
 
     local function NamiMenu()
-        Menu.Text("" .. ASCIIArt, true)
-        Menu.Text("" .. ASCIIArt2, true)
-        Menu.Text("" .. ASCIIArt3, true)
-        Menu.Text("" .. ASCIIArt4, true)
-        Menu.Text("" .. ASCIIArt5, true)
-        Menu.Text("" .. ASCIIArt6, true)
-        Menu.Text("", true)
-        Menu.Separator()
-
-        Menu.Text("", true)
-        Menu.Text("Version:", true) Menu.SameLine()
-        Menu.ColoredText(scriptVersion, scriptColor, false)
-        Menu.Text("Last Updated:", true) Menu.SameLine()
-        Menu.ColoredText(scriptLastUpdated, scriptColor, false)
-        Menu.Text("Creator:", true) Menu.SameLine()
-        Menu.ColoredText(scriptCreator, 0x6EFF26FF, false)
-        Menu.Text("Credits to:", true) Menu.SameLine()
-        Menu.ColoredText(credits, 0x6EFF26FF, false)
-
-        if scriptIsBeta then
-            Menu.ColoredText("This script is in an early stage!", 0xFFFF00FF, true)
-            Menu.ColoredText("Please keep in mind, that you might encounter bugs/issues.", 0xFFFF00FF, true)
-            Menu.ColoredText("If you find any, please contact " .. scriptCreator .. " via robur.lol", 0xFF0000FF, true)
-        end
-
-        if Menu.Checkbox("Nami.Updates125", "Don't show updates") == false then
-            Menu.Separator()
-            Menu.ColoredText("*** UPDATE " .. scriptLastUpdated .. " ***", scriptColor, true)
-            Menu.Separator()
-            Menu.ColoredText(patchNotesVersion, 0XFFFF00FF, true)
-            Menu.Text("- Adjusted Hitchance for new Prediction", true)
-            Menu.Separator()
-            Menu.ColoredText("*** UPDATE " .. patchNotesPrevUpdate .. " ***", scriptColor, true)
-            Menu.Separator()
-            Menu.ColoredText(patchNotesPreVersion, 0XFFFF00FF, true)
-            Menu.Text("- Tried different Method of W E Usage Enemy FOW Fix", true)
-            Menu.Text("- Fixed other minor Bugs", true)
-        end
-
-        Menu.Separator()
-
         Menu.NewTree("Nami.comboMenu", "Combo Settings", function()
-
             Menu.ColumnLayout("Nami.comboMenu.Q", "Nami.comboMenu.Q", 1, true, function()
-                Menu.Text("")
                 QHeader()
                 Menu.Checkbox("Nami.combo.useQ", "Enable Q", true)
-                Menu.Separator()
             end)
 
             Menu.ColumnLayout("Nami.comboMenu.WR", "Nami.comboMenu.WR", 2, true, function()
@@ -879,7 +833,6 @@ function Nami.InitMenu()
                     Menu.Slider("Nami.combo.selfWSlider", "if < %HP", 30, 1, 100, 1)
                 end                
                 Menu.NextColumn()
-                Menu.Text("")
                 EHeader()
                 Menu.Checkbox("Nami.combo.allyE", "Enable E for Ally", true)
                 local cbResult3 = OriUtils.MGet("combo.allyE")
@@ -904,7 +857,6 @@ function Nami.InitMenu()
                     end)
                 end
                 Menu.Checkbox("Nami.combo.selfE", "Enable E for Self", true)
-                Menu.Text("")
                 RHeader()
                 Menu.Checkbox("Nami.combo.useR", "Enable R", true)
                 local cbResult5 = OriUtils.MGet("combo.useR")
@@ -913,44 +865,34 @@ function Nami.InitMenu()
                 end
             end)
         end)
-        Menu.Separator()
 
         Menu.NewTree("Nami.harassMenu", "Harass Settings", function()
             Menu.ColumnLayout("Nami.harassMenu.WE", "Nami.harassMenu.WE", 2, true, function()
-                Menu.Text("")
                 WHeader()
                 Menu.Checkbox("Nami.harass.useW", "Enable W", true)
                 Menu.NextColumn()
-                Menu.Text("")
                 EHeader()
                 Menu.Checkbox("Nami.harass.useE", "Enable E", false)
             end)
         end)
-        Menu.Separator()
 
         Menu.NewTree("Nami.clearMenu", "Clear Settings", function()
             Menu.Checkbox("Nami.clear.enemiesAround", "Don't clear while enemies around", true)
-            Menu.Separator()
             Menu.ColumnLayout("Nami.clearMenu.QE", "Nami.clearMenu.QE", 2, true, function()
-                Menu.Text("")
                 QHeader()
                 Menu.Checkbox("Nami.clear.useQ", "Enable Q", true)
                 Menu.Slider("Nami.clear.QSlider", "Use on X Minions", 4, 1, 6, 1)
                 Menu.NextColumn()
-                Menu.Text("")
                 EHeader()
                 Menu.ColoredText("E will prioritize ally, if ally is in E Range", scriptColor, true)
                 Menu.Checkbox("Nami.clear.useE", "Enable E", true)               
             end)
         end)
-        Menu.Separator()
 
         Menu.NewTree("Nami.miscMenu", "Misc Settings", function()
             Menu.ColumnLayout("Nami.miscMenu.R", "Nami.miscMenu.R", 2, true, function()
-                Menu.Text("")
                 RHeader()
                 Menu.Keybind("Nami.misc.forceR", "Force R", string.byte("T"), false, false, true)
-                Menu.Text("")
                 QHeader()
                 Menu.Checkbox("Nami.gapclose.Q", "Use Gapclose Q", true)
                 local cbResult6 = OriUtils.MGet("gapclose.Q")
@@ -977,7 +919,6 @@ function Nami.InitMenu()
                 --[[RHeader()
                 Menu.Checkbox("Nami.gapclose.R", "Use Gapclose R", true)]]--
                 Menu.NextColumn()
-                Menu.Text("")
                 WHeader()
                 Menu.Keybind("Nami.misc.forceW", "Force W on Ally/Self", string.byte("Z"), false, false, true)
                 Menu.Checkbox("Nami.misc.wWL", "Use Whitelist from Combo", true)
@@ -1029,22 +970,16 @@ function Nami.InitMenu()
                 end
             end)
         end)
-        Menu.Separator()
 
         Menu.NewTree("Nami.hcMenu", "Hitchance Settings", function()
             Menu.ColumnLayout("Nami.hcMenu.QR", "Nami.hcMenu.QR", 2, true, function()
-                Menu.Text("")
                 QHeaderHit()
-                Menu.Text("")
                 Menu.Slider("Nami.hcNew.Q", "%", 25, 1, 100, 1)
                 Menu.NextColumn()
-                Menu.Text("")
                 RHeaderHit()
-                Menu.Text("")
                 Menu.Slider("Nami.hcNew.R", "%", 50, 1, 100, 1)
             end)
         end)
-        Menu.Separator()
 
         Menu.NewTree("Nami.drawMenu", "Draw Settings", function()
             OriUtils.AddDrawMenu(drawData)
