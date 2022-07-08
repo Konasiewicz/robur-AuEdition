@@ -5,7 +5,7 @@ local scriptCreator = "AURUM"
 local credits = "Orietto"
 local patchNotesPrevUpdate = "12/24/2021"
 local patchNotesPreVersion = "1.2.5"
-local patchNotesVersion, scriptVersionUpdater = "1.2.7", "1.2.7"
+local patchNotesVersion, scriptVersionUpdater = "1.2.7", "1.2.8"
 local scriptVersion = scriptVersionUpdater
 local scriptLastUpdated = "02/19/2022"
 local scriptIsBeta = false
@@ -269,8 +269,6 @@ function OriUtils.AddDrawMenu(data)
             Menu.ColorPicker(cacheName .. ".draw." .. id .. ".color", "Color", scriptColor)
         end)
     end
-
-    Menu.Separator()
 
     Menu.Checkbox(cacheName .. ".draw." .. "comboDamage", "Draw combo damage on healthbar", true)
     Menu.Checkbox(cacheName .. ".drawMenu.AlwaysDraw", "Always show Drawings", false)
@@ -1104,58 +1102,16 @@ function Kassadin.InitMenu()
     end
 
     local function KassadinMenu()
-        Menu.Text("" .. ASCIIArt, true)
-        Menu.Text("" .. ASCIIArt2, true)
-        Menu.Text("" .. ASCIIArt3, true)
-        Menu.Text("" .. ASCIIArt4, true)
-        Menu.Text("" .. ASCIIArt5, true)
-        Menu.Text("" .. ASCIIArt6, true)
-        Menu.Separator()
-
-        Menu.Text("", true)
-        Menu.Text("Version:", true) Menu.SameLine()
-        Menu.ColoredText(scriptVersion, scriptColor, false)
-        Menu.Text("Last Updated:", true) Menu.SameLine()
-        Menu.ColoredText(scriptLastUpdated, scriptColor, false)
-        Menu.Text("Creator:", true) Menu.SameLine()
-        Menu.ColoredText(scriptCreator, 0x6EFF26FF, false)
-        Menu.Text("Credits to:", true) Menu.SameLine()
-        Menu.ColoredText(credits, 0x6EFF26FF, false)
-
-        if scriptIsBeta then
-            Menu.ColoredText("This script is in an early stage , which means you'll have to redownload the final version once it's done!", 0xFFFF00FF, true)
-            Menu.ColoredText("Please keep in mind, that you might encounter bugs/issues.", 0xFFFF00FF, true)
-            Menu.ColoredText("If you find any, please contact " .. scriptCreator .. " via robur.lol", 0xFF0000FF, true)
-        end
-        
-        if Menu.Checkbox("Kassadin.Updates125", "Don't show updates") == false then
-            Menu.Separator()
-            Menu.ColoredText("*** UPDATE " .. scriptLastUpdated .. " ***", scriptColor, true)
-            Menu.Separator()
-            Menu.ColoredText(patchNotesVersion, 0XFFFF00FF, true)
-            Menu.Text("- Adjusted Hitchance for new Prediction", true)
-            Menu.Separator()
-            Menu.ColoredText("*** UPDATE " .. patchNotesPrevUpdate .. " ***", scriptColor, true)
-            Menu.Separator()
-            Menu.ColoredText(patchNotesPreVersion, 0XFFFF00FF, true)
-            Menu.Text("- Added Waveclear R and Jungleclear R", true)
-        end
-
-        Menu.Separator()
-
         Menu.NewTree("Kassadin.comboMenu", "Combo Settings", function()
             Menu.ColumnLayout("Kassadin.comboMenu.QE", "Kassadin.comboMenu.QE", 2, true, function()
-                Menu.Text("")
                 QHeader()
                 Menu.Checkbox("Kassadin.combo.useQ", "Enable Q", true)
                 Menu.NextColumn()
-                Menu.Text("")
                 EHeader()
                 Menu.Checkbox("Kassadin.combo.useE", "Enable E", true)
             end)
 
             Menu.ColumnLayout("Kassadin.comboMenu.WR", "Kassadin.comboMenu.WR", 2, true, function()
-                Menu.Text("")
                 WHeader()
                 Menu.Checkbox("Kassadin.combo.useW", "Enable W", true)
                 Menu.NextColumn()
@@ -1166,25 +1122,20 @@ function Kassadin.InitMenu()
                 Menu.Slider("Kassadin.combo.RManaSlider", "Use R if Mana is above x %", 35, 1, 100, 1)
             end)
         end)
-        Menu.Separator()
 
         Menu.NewTree("Kassadin.harassMenu", "Harass Settings", function()
             Menu.ColumnLayout("Kassadin.harassMenu.QE", "Kassadin.harassMenu.QE", 2, true, function()
-                Menu.Text("")
                 QHeader()
                 Menu.Checkbox("Kassadin.harass.useQ", "Enable Q", true)
                 Menu.NextColumn()
-                Menu.Text("")
                 EHeader()
                 Menu.Checkbox("Kassadin.harass.useE", "Enable E", false)
             end)
         end)
-        Menu.Separator()
 
         Menu.NewTree("Kassadin.clearMenu", "Clear Settings", function()
             Menu.NewTree("Kassadin.waveMenu", "Waveclear", function()
                 Menu.Checkbox("Kassadin.clear.enemiesAround", "Don't clear while enemies around", true)
-                Menu.Separator()
                 Menu.Checkbox("Kassadin.clear.pokeQ", "Enable Q Poke on Enemy", true)
                 Menu.Checkbox("Kassadin.clear.useQ", "Use Q if not in Range for W", false)
                 Menu.Dropdown("Kassadin.clear.useQ.options", "Use Q for", 0, {"Canon", "All"})
@@ -1210,11 +1161,9 @@ function Kassadin.InitMenu()
                 Menu.Slider("Kassadin.jglclear.RSlider", "Use R X Times", 2, 1, 5)
             end)
         end)
-        Menu.Separator()
 
         Menu.NewTree("Kassadin.lasthitMenu", "Lasthit Settings", function()
             Menu.ColumnLayout("Kassadin.lasthitMenu.W", "Kassadin.lasthitMenu.W", 1, true, function()
-                Menu.Text("")
                 QHeader()
                 Menu.Checkbox("Kassadin.lasthit.useQ", "Use Q if not in Range for W", true)
                 Menu.Dropdown("Kassadin.lasthit.useQ.options", "Use Q on", 0, {"Canon", "All"})
@@ -1227,13 +1176,10 @@ function Kassadin.InitMenu()
                     Menu.Slider("Kassadin.lasthit.useQ.1.ManaSlider", "Only use if Mana above X", 40, 1, 100, 1)
                     Menu.Checkbox("Kassadin.lasthit.useQ.alwaysCanon", "Always use for Canon", true)
                 end
-                Menu.Text("")
                 WHeader()
                 Menu.Checkbox("Kassadin.lasthit.useW", "Enable W", true)
             end)
         end)
-
-        Menu.Separator()
 
         Menu.NewTree("Kassadin.stealMenu", "Steal Settings", function()
             Menu.NewTree("Kassadin.ksMenu", "Killsteal", function()
@@ -1333,38 +1279,29 @@ function Kassadin.InitMenu()
                 Menu.Checkbox("Kassadin.steal.useR", "Junglesteal with R", false)
             end)
         end)
-        Menu.Separator()
 
         Menu.NewTree("Kassadin.miscMenu", "Misc Settings", function()
             Menu.ColumnLayout("Kassadin.miscMenu.R", "Kassadin.miscMenu.R", 2, true, function()
-                Menu.Text("")
                 RHeader()
                 Menu.Keybind("Kassadin.misc.flashR", "Flash R", string.byte("G"), false, false, true)
                 Menu.Dropdown("Kassadin.misc.flashR.options", "Mode", 1, {"R > Flash (Experimental)", "Flash > R (Slower)"})
                 Menu.NextColumn()
-                Menu.Text("")
                 RHeader()
                 Menu.Checkbox("Kassadin.misc.useR", "Use R for Flee", true)
                 Menu.Slider("Kassadin.misc.RSlider", "Use R only if < Stacks", 4, 1, 4)
                 Menu.Checkbox("Kassadin.misc.useRNoSlider", "Ignore R Stacks", true)
             end)
         end)
-        Menu.Separator()
 
         Menu.NewTree("Kassadin.hcMenu", "Hitchance Settings", function()
             Menu.ColumnLayout("Kassadin.hcMenu.QE", "Kassadin.hcMenu.QE", 2, true, function()
-                Menu.Text("")
                 EHeaderHit()
-                Menu.Text("")
                 Menu.Slider("Kassadin.hc.E", "%", 60, 1, 100, 1)
                 Menu.NextColumn()
-                Menu.Text("")
                 RHeaderHit()
-                Menu.Text("")
                 Menu.Slider("Kassadin.hc.R", "%", 60, 1, 100, 1)
             end)
         end)
-        Menu.Separator()
 
         Menu.NewTree("Kassadin.drawMenu", "Draw Settings", function()
             OriUtils.AddDrawMenu(drawData)
