@@ -6,7 +6,7 @@ local scriptCreator = "AURUM"
 local credits = "Orietto"
 local patchNotesPrevUpdate = "11/19/2021"
 local patchNotesPreVersion = "1.1.5"
-local patchNotesVersion, scriptVersionUpdater = "1.1.7", "1.1.7"
+local patchNotesVersion, scriptVersionUpdater = "1.1.7", "1.1.8"
 local scriptVersion = scriptVersionUpdater
 local scriptLastUpdated = "02/19/2022"
 local scriptIsBeta = false
@@ -222,8 +222,6 @@ function OriUtils.AddDrawMenu(data)
             Menu.ColorPicker(cacheName .. ".draw." .. id .. ".color", "Color", scriptColor)
         end)
     end
-
-    Menu.Separator()
 
     Menu.Checkbox(cacheName .. ".draw." .. "comboDamage", "Draw combo damage on healthbar", false)
     Menu.Checkbox("Amumu.drawMenu.AlwaysDraw", "Always show Drawings", false)
@@ -877,60 +875,17 @@ function Amumu.InitMenu()
     end
 
     local function AmumuMenu()
-        Menu.Text("" .. ASCIIArt, true)
-        Menu.Text("" .. ASCIIArt2, true)
-        Menu.Text("" .. ASCIIArt3, true)
-        Menu.Text("" .. ASCIIArt4, true)
-        Menu.Text("" .. ASCIIArt5, true)
-        Menu.Text("", true)
-        Menu.Separator()
-
-        Menu.Text("", true)
-        Menu.Text("Version:", true) Menu.SameLine()
-        Menu.ColoredText(scriptVersion, scriptColor, false)
-        Menu.Text("Last Updated:", true) Menu.SameLine()
-        Menu.ColoredText(scriptLastUpdated, scriptColor, false)
-        Menu.Text("Creator:", true) Menu.SameLine()
-        Menu.ColoredText(scriptCreator, 0x6EFF26FF, false)
-        Menu.Text("Credits to:", true) Menu.SameLine()
-        Menu.ColoredText(credits, 0x6EFF26FF, false)
-
-        if scriptIsBeta then
-            Menu.ColoredText("This script is in an early stage , which means you'll have to redownload the final version once it's done!", 0xFFFF00FF, true)
-            Menu.ColoredText("Please keep in mind, that you might encounter bugs/issues.", 0xFFFF00FF, true)
-            Menu.ColoredText("If you find any, please contact " .. scriptCreator .. " via robur.lol", 0xFF0000FF, true)
-        end
-        
-        if Menu.Checkbox("Amumu.Updates115", "Don't show updates") == false then
-            Menu.Separator()
-            Menu.ColoredText("*** UPDATE " .. scriptLastUpdated .. " ***", scriptColor, true)
-            Menu.Separator()
-            Menu.ColoredText(patchNotesVersion, 0XFFFF00FF, true)
-            Menu.Text("- Adjusted Hitchance for new Prediction", true)
-            Menu.Separator()
-            Menu.ColoredText("*** UPDATE " .. patchNotesPrevUpdate .. " ***", scriptColor, true)
-            Menu.Separator()
-            Menu.ColoredText(patchNotesPreVersion, 0XFFFF00FF, true)
-            Menu.Text("- Fixed KS with Q E R", true)
-            Menu.Text("- Uploaded correct version with Gapclose/Interrupt (incl. Whitelist)", true)
-            Menu.Text("- Added AutoR on X Enemies (Default 4) as requested", true)
-        end
-
-        Menu.Separator()
 
         Menu.NewTree("Amumu.comboMenu", "Combo Settings", function()
             Menu.ColumnLayout("Amumu.comboMenu.QE", "Amumu.comboMenu.QE", 2, true, function()
-                Menu.Text("")
                 QHeader()
                 Menu.Checkbox("Amumu.combo.useQ", "Enable Q", true)
                 Menu.NextColumn()
-                Menu.Text("")
                 EHeader()
                 Menu.Checkbox("Amumu.combo.useE", "Enable E", true)
             end)
 
             Menu.ColumnLayout("Amumu.comboMenu.WR", "Amumu.comboMenu.WR", 2, true, function()
-                Menu.Text("")
                 WHeader()
                 Menu.Checkbox("Amumu.combo.useW", "Enable W", true)
                 Menu.Checkbox("Amumu.combo.disableW", "Automatically disable W, if enemy is not in Range", true)
@@ -940,20 +895,16 @@ function Amumu.InitMenu()
                 Menu.Slider("Amumu.combo.useR.minEnemies", "Min Enemies", 3, 1, 5, 1)
             end)
         end)
-        Menu.Separator()
 
         Menu.NewTree("Amumu.harassMenu", "Harass Settings", function()
             Menu.ColumnLayout("Amumu.harassMenu.QE", "Amumu.harassMenu.QE", 2, true, function()
-                Menu.Text("")
                 WHeader()
                 Menu.Checkbox("Amumu.harass.useW", "Enable W", false)
                 Menu.NextColumn()
-                Menu.Text("")
                 EHeader()
                 Menu.Checkbox("Amumu.harass.useE", "Enable E", true)
             end)
         end)
-        Menu.Separator()
 
         Menu.NewTree("Amumu.clearMenu", "Clear Settings", function()
             Menu.NewTree("Amumu.jglMenu", "Jungleclear", function()
@@ -971,7 +922,6 @@ function Amumu.InitMenu()
 
             end)
         end)
-        Menu.Separator()
 
         Menu.NewTree("Amumu.stealMenu", "Steal Settings", function()
             Menu.NewTree("Amumu.ksMenu", "Killsteal", function()
@@ -1048,24 +998,19 @@ function Amumu.InitMenu()
                 Menu.Checkbox("Amumu.steal.useR", "Junglesteal with R", false)
             end)
         end)
-        Menu.Separator()
 
         Menu.NewTree("Amumu.miscMenu", "Misc Settings", function()
             Menu.ColumnLayout("Amumu.miscMenu.R", "Amumu.miscMenu.R", 2, true, function()
-                Menu.Text("")
                 RHeader()
                 Menu.Keybind("Amumu.misc.forceR", "Force R", string.byte("T"), false, false, true)
                 Menu.Slider("Amumu.misc.forceRSlider", "Force R if it can hit >=", 1, 1, 5, 1)
                 Menu.NextColumn()
-                Menu.Text("")
                 RHeader()
                 Menu.Keybind("Amumu.misc.flashR", "Flash R", string.byte("G"), false, false, true)
                 Menu.Dropdown("Amumu.misc.flashR.options", "Mode", 1, {"R > Flash (Experimental)", "Flash > R (Slower)"})
                 --Menu.Checkbox("Amumu.misc.flashR.Inside", "Flash Inside if hit > than combo", true)
             end)
-            Menu.Separator()
             Menu.ColumnLayout("Amumu.miscMenu.gapclose", "Amumu.miscMenu.Q", 2, true, function()
-                Menu.Text("")
                 QHeader()
                 Menu.Checkbox("Amumu.gapclose.Q", "Gapclose with Q", true)
                 local cbResult4 = OriUtils.MGet("gapclose.Q")
@@ -1090,14 +1035,11 @@ function Amumu.InitMenu()
                     end)
                 end
                 Menu.NextColumn()
-                Menu.Text("")
                 RHeader()
                 Menu.Checkbox("Amumu.misc.AutoR", "Enable Auto R", true)
                 Menu.Slider("Amumu.misc.AutoRSlider", "If can hit X Enmies", 4, 1, 5, 1)
             end)
-            Menu.Separator()
             Menu.ColumnLayout("Amumu.miscMenu.interrupt", "Amumu.miscMenu2.Q", 2, true, function()
-                Menu.Text("")
                 QHeader()
                 Menu.Checkbox("Amumu.interrupt.Q", "Interrupt with Q", true)
                 local cbResult4 = OriUtils.MGet("interrupt.Q")
@@ -1122,7 +1064,6 @@ function Amumu.InitMenu()
                     end)
                 end
                 Menu.NextColumn()
-                Menu.Text("")
                 RHeader()
                 Menu.Checkbox("Amumu.interrupt.R", "Interrupt with R", true)
                 local cbResult4 = OriUtils.MGet("interrupt.R")
@@ -1148,16 +1089,13 @@ function Amumu.InitMenu()
                 end
             end)
         end)
-        Menu.Separator()
 
         Menu.NewTree("Amumu.hcMenu", "Hitchance Settings", function()
             Menu.ColumnLayout("Amumu.hcMenu.QE", "Amumu.hcMenu.QE", 1, true, function()
-                Menu.Text("")
                 QHeaderHit()
                 Menu.Slider("Amumu.hc.Q", "%", 45, 1, 100, 1)
             end)
         end)
-        Menu.Separator()
 
         Menu.NewTree("Amumu.drawMenu", "Draw Settings", function()
             OriUtils.AddDrawMenu(drawData)
