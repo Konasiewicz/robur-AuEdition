@@ -5,7 +5,7 @@ local scriptCreator = "AURUM"
 local credits = "Orietto"
 local patchNotesPrevUpdate = "02/19/2022"
 local patchNotesPreVersion = "1.3.0"
-local patchNotesVersion, scriptVersionUpdater = "1.3.2", "1.3.2"
+local patchNotesVersion, scriptVersionUpdater = "1.3.2", "1.3.3"
 local scriptVersion = scriptVersionUpdater
 local scriptLastUpdated = "03/24/2022"
 local scriptIsBeta = false
@@ -283,8 +283,6 @@ function OriUtils.AddDrawMenu(data)
             Menu.ColorPicker(cacheName .. ".draw." .. id .. ".color", "Color", scriptColor)
         end)
     end
-
-    Menu.Separator()
 
     Menu.Checkbox(cacheName .. ".draw." .. "comboDamage", "Draw combo damage on healthbar", true)
     Menu.Checkbox("Blitzcrank.drawMenu.AlwaysDraw", "Always show Drawings", false)
@@ -1010,62 +1008,16 @@ function Blitzcrank.InitMenu()
     end
 
     local function BlitzcrankMenu()
-        Menu.Text("" .. ASCIIArt, true)
-        Menu.Text("" .. ASCIIArt2, true)
-        Menu.Text("" .. ASCIIArt3, true)
-        Menu.Text("" .. ASCIIArt4, true)
-        Menu.Text("" .. ASCIIArt5, true)
-        Menu.Text("" .. ASCIIArt6, true)
-        Menu.Text("", true)
-        Menu.Separator()
-
-        Menu.Text("", true)
-        Menu.Text("Version:", true) Menu.SameLine()
-        Menu.ColoredText(scriptVersion, scriptColor, false)
-        Menu.Text("Last Updated:", true) Menu.SameLine()
-        Menu.ColoredText(scriptLastUpdated, scriptColor, false)
-        Menu.Text("Creator:", true) Menu.SameLine()
-        Menu.ColoredText(scriptCreator, 0x6EFF26FF, false)
-        Menu.Text("Credits to:", true) Menu.SameLine()
-        Menu.ColoredText(credits, 0x6EFF26FF, false)
-
-        if scriptIsBeta then
-            Menu.ColoredText("This script is in an early stage , which means you'll have to redownload the final version once it's done!", 0xFFFF00FF, true)
-            Menu.ColoredText("Please keep in mind, that you might encounter bugs/issues.", 0xFFFF00FF, true)
-            Menu.ColoredText("If you find any, please contact " .. scriptCreator .. " via robur.lol", 0xFF0000FF, true)
-        end
-        
-        if Menu.Checkbox("Blitzcrank.Updates130", "Don't show updates") == false then
-            Menu.Separator()
-            Menu.ColoredText("*** UPDATE " .. scriptLastUpdated .. " ***", scriptColor, true)
-            Menu.Separator()
-            Menu.ColoredText(patchNotesVersion, 0XFFFF00FF, true)
-            Menu.Text("- Added Morgana E Check in Combo", true)
-            Menu.Text("- Removed 'Enemies Around'-Check inside Waveclear", true)
-            Menu.Text("- Fixed Harass Q Range", true)
-            Menu.Text("- Code optimization", true)
-            Menu.Separator()
-            Menu.ColoredText("*** UPDATE " .. patchNotesPrevUpdate .. " ***", scriptColor, true)
-            Menu.Separator()
-            Menu.ColoredText(patchNotesPreVersion, 0XFFFF00FF, true)
-            Menu.Text("- Adjusted Hitchance for new Prediction", true)
-        end
-
-        Menu.Separator()
-
         Menu.NewTree("Blitzcrank.comboMenu", "Combo Settings", function()
             Menu.ColumnLayout("Blitzcrank.comboMenu.QE", "Blitzcrank.comboMenu.QE", 2, true, function()
-                Menu.Text("")
                 QHeader()
                 Menu.Checkbox("Blitzcrank.combo.useQ", "Enable Q", true)
                 Menu.NextColumn()
-                Menu.Text("")
                 EHeader()
                 Menu.Checkbox("Blitzcrank.combo.useE", "Enable E", true)
             end)
 
             Menu.ColumnLayout("Blitzcrank.comboMenu.WR", "Blitzcrank.comboMenu.WR", 2, true, function()
-                Menu.Text("")
                 WHeader()
                 Menu.Checkbox("Blitzcrank.combo.useW", "Enable W", true)
                 Menu.Checkbox("Blitzcrank.combo.useW.CRange", "", true)Menu.SameLine()
@@ -1085,20 +1037,16 @@ function Blitzcrank.InitMenu()
                 Menu.ColoredText("Reducing R damage can be good if you don't wanna \nsteal kills from your teammates. The damage will only be\nreduced if an ally is around", scriptColor, true)
             end)
         end)
-        Menu.Separator()
 
         Menu.NewTree("Blitzcrank.harassMenu", "Harass Settings", function()
             Menu.ColumnLayout("Blitzcrank.harassMenu.QE", "Blitzcrank.harassMenu.QE", 2, true, function()
-                Menu.Text("")
                 QHeader()
                 Menu.Checkbox("Blitzcrank.harass.useQ", "Enable Q", true)
                 Menu.NextColumn()
-                Menu.Text("")
                 EHeader()
                 Menu.Checkbox("Blitzcrank.harass.useE", "Enable E", false)
             end)
         end)
-        Menu.Separator()
 
         Menu.NewTree("Blitzcrank.clearMenu", "Clear Settings", function()
             Menu.NewTree("Blitzcrank.waveMenu", "Waveclear", function()
@@ -1111,17 +1059,14 @@ function Blitzcrank.InitMenu()
                 Menu.Checkbox("Blitzcrank.jglclear.useE", "Use E on Scuttle", true)
             end)
         end)
-        Menu.Separator()
 
         Menu.NewTree("Blitzcrank.lasthitMenu", "Lasthit Settings", function()
             Menu.ColumnLayout("Blitzcrank.lasthitMenu.QE", "Blitzcrank.lasthitMenu.QE", 1, true, function()
-                Menu.Text("")
                 QHeader()
                 Menu.ColoredText("Will lasthit Canon Minions with Q, if you are not in AA Range (Distance 750 or more)\n and if an Ally is near you - One or more Relic Shield Stack(s) is required", scriptColor, true)
                 Menu.Checkbox("Blitzcrank.lasthit.useQ", "Enable Q for Canon Minions", true)
             end)
         end)
-        Menu.Separator()
 
         Menu.NewTree("Blitzcrank.stealMenu", "Steal Settings", function()
             Menu.NewTree("Blitzcrank.ksMenu", "Killsteal", function()
@@ -1175,34 +1120,27 @@ function Blitzcrank.InitMenu()
                 Menu.Checkbox("Blitzcrank.steal.useR", "Junglesteal with R", false)
             end)
         end)
-        Menu.Separator()
 
         Menu.NewTree("Blitzcrank.miscMenu", "Misc Settings", function()
             Menu.ColumnLayout("Blitzcrank.miscMenu.R", "Blitzcrank.miscMenu.R", 2, true, function()
-                Menu.Text("")
                 QHeader()
                 Menu.Slider("Blitzcrank.misc.QRange", "Q Range", 980, 1, 1075, 1)
                 Menu.Checkbox("Blitzcrank.misc.QRangeHarass", "Use Q Range above for Harass too", false)
                 Menu.Keybind("Blitzcrank.misc.flashQ", "Flash Q (Hold)", string.byte("G"), false, false, true)
                 Menu.NextColumn()
-                Menu.Text("")
                 WHeader()
                 Menu.Checkbox("Blitzcrank.misc.fleeW", "Flee with W", true)
                 RHeader()
                 Menu.Keybind("Blitzcrank.misc.forceR", "Force R", string.byte("T"), false, false, true)
             end)
         end)
-        Menu.Separator()
 
         Menu.NewTree("Blitzcrank.hcMenu", "Hitchance Settings", function()
             Menu.ColumnLayout("Blitzcrank.hcMenu.QE", "Blitzcrank.hcMenu.QE", 1, true, function()
-                Menu.Text("")
                 QHeaderHit()
-                Menu.Text("")
                 Menu.Slider("Blitzcrank.hcNew.Q", "%", 45, 1, 100, 1)
             end)
         end)
-        Menu.Separator()
 
         Menu.NewTree("Blitzcrank.drawMenu", "Draw Settings", function()
             OriUtils.AddDrawMenu(drawData)
