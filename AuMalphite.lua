@@ -5,7 +5,7 @@ local scriptCreator = "AURUM"
 local credits = "Orietto"
 local patchNotesPrevUpdate = "12/21/2021"
 local patchNotesPreVersion = "1.1.0"
-local patchNotesVersion, scriptVersionUpdater = "1.1.2", "1.1.2"
+local patchNotesVersion, scriptVersionUpdater = "1.1.2", "1.1.3"
 local scriptVersion = scriptVersionUpdater
 local scriptLastUpdated = "02/19/2022"
 local scriptIsBeta = false
@@ -234,8 +234,6 @@ function OriUtils.AddDrawMenu(data)
             Menu.ColorPicker(cacheName .. ".draw." .. id .. ".color", "Color", scriptColor)
         end)
     end
-
-    Menu.Separator()
 
     Menu.Checkbox(cacheName .. ".draw." .. "comboDamage", "Draw combo damage on healthbar", true)
     Menu.Checkbox(cacheName .. ".draw." .. "AlwaysDraw", "Always show Drawings", false)
@@ -1011,60 +1009,16 @@ function Malphite.InitMenu()
     end
 
     local function MalphiteMenu()
-        Menu.Text("" .. ASCIIArt, true)
-        Menu.Text("" .. ASCIIArt2, true)
-        Menu.Text("" .. ASCIIArt3, true)
-        Menu.Text("" .. ASCIIArt4, true)
-        Menu.Text("" .. ASCIIArt5, true)
-        Menu.Text("" .. ASCIIArt6, true)
-        Menu.Text("" .. ASCIIArt7, true)
-        Menu.Text("" .. ASCIIArt8, true)
-        Menu.Separator()
-
-        Menu.Text("", true)
-        Menu.Text("Version:", true) Menu.SameLine()
-        Menu.ColoredText(scriptVersion, scriptColor, false)
-        Menu.Text("Last Updated:", true) Menu.SameLine()
-        Menu.ColoredText(scriptLastUpdated, scriptColor, false)
-        Menu.Text("Creator:", true) Menu.SameLine()
-        Menu.ColoredText(scriptCreator, 0x6EFF26FF, false)
-        Menu.Text("Credits to:", true) Menu.SameLine()
-        Menu.ColoredText(credits, 0x6EFF26FF, false)
-
-        if scriptIsBeta then
-            Menu.ColoredText("This script is in an early stage , which means you'll have to redownload the final version once it's done!", 0xFFFF00FF, true)
-            Menu.ColoredText("Please keep in mind, that you might encounter bugs/issues.", 0xFFFF00FF, true)
-            Menu.ColoredText("If you find any, please contact " .. scriptCreator .. " via robur.lol", 0xFF0000FF, true)
-        end
-        
-        if Menu.Checkbox("Malphite.Updates110", "Don't show updates") == false then
-            Menu.Separator()
-            Menu.ColoredText("*** UPDATE " .. scriptLastUpdated .. " ***", scriptColor, true)
-            Menu.Separator()
-            Menu.ColoredText(patchNotesVersion, 0XFFFF00FF, true)
-            Menu.Text("- Adjusted Hitchance for new Prediction", true)
-            Menu.Separator()
-            Menu.ColoredText("*** UPDATE " .. patchNotesPrevUpdate .. " ***", scriptColor, true)
-            Menu.Separator()
-            Menu.ColoredText(patchNotesPreVersion, 0XFFFF00FF, true)
-            Menu.Text("- Initial Release of AuMalphite 1.0.0", true)
-        end
-
-        Menu.Separator()
-
         Menu.NewTree("Malphite.comboMenu", "Combo Settings", function()
             Menu.ColumnLayout("Malphite.comboMenu.QE", "Malphite.comboMenu.QE", 2, true, function()
-                Menu.Text("")
                 QHeader()
                 Menu.Checkbox("Malphite.combo.useQ", "Enable Q", true)
                 Menu.NextColumn()
-                Menu.Text("")
                 EHeader()
                 Menu.Checkbox("Malphite.combo.useE", "Enable E", true)
             end)
 
             Menu.ColumnLayout("Malphite.comboMenu.WR", "Malphite.comboMenu.WR", 2, true, function()
-                Menu.Text("")
                 WHeader()
                 Menu.Checkbox("Malphite.combo.useW", "Enable W", true)
                 Menu.NextColumn()
@@ -1073,25 +1027,20 @@ function Malphite.InitMenu()
                 Menu.Slider("Malphite.combo.useR.minEnemies", "Use if X enemy(s)", 3, 1, 5)
             end)
         end)
-        Menu.Separator()
 
         Menu.NewTree("Malphite.harassMenu", "Harass Settings", function()
             Menu.ColumnLayout("Malphite.harassMenu.QE", "Malphite.harassMenu.QE", 2, true, function()
-                Menu.Text("")
                 QHeader()
                 Menu.Checkbox("Malphite.harass.useQ", "Enable Q", true)
                 Menu.NextColumn()
-                Menu.Text("")
                 EHeader()
                 Menu.Checkbox("Malphite.harass.useE", "Enable E", false)
             end)
         end)
-        Menu.Separator()
 
         Menu.NewTree("Malphite.clearMenu", "Clear Settings", function()
             Menu.NewTree("Malphite.waveMenu", "Waveclear", function()
                 Menu.Checkbox("Malphite.clear.enemiesAround", "Don't clear while enemies around", true)
-                Menu.Separator()
                 Menu.Checkbox("Malphite.clear.pokeQ", "Enable Q Poke on Enemy", true)
                 Menu.Checkbox("Malphite.clear.useQ", "Use Q", true)
                 Menu.Dropdown("Malphite.clear.useQ.options", "Use Q for", 0, {"Canon", "All"})
@@ -1110,11 +1059,8 @@ function Malphite.InitMenu()
             end)
         end)
 
-        Menu.Separator()
-
         Menu.NewTree("Malphite.lasthitMenu", "Lasthit Settings", function()
             Menu.ColumnLayout("Malphite.lasthitMenu.W", "Malphite.lasthitMenu.W", 1, true, function()
-                Menu.Text("")
                 WHeader()
                 Menu.Checkbox("Malphite.lasthit.useW", "Enable W", true)
                 Menu.Dropdown("Malphite.lasthit.useW.options", "Use W on", 0, {"Canon", "All"})
@@ -1129,7 +1075,6 @@ function Malphite.InitMenu()
                 end
             end)
         end)
-        Menu.Separator()
 
         Menu.NewTree("Malphite.stealMenu", "Steal Settings", function()
             Menu.NewTree("Malphite.ksMenu", "Killsteal", function()
@@ -1229,11 +1174,9 @@ function Malphite.InitMenu()
                 Menu.Checkbox("Malphite.steal.useR", "Junglesteal with R", false)
             end)
         end)
-        Menu.Separator()
 
         Menu.NewTree("Malphite.miscMenu", "Misc Settings", function()
             Menu.ColumnLayout("Malphite.miscMenu.R", "Malphite.miscMenu.R", 2, true, function()
-                Menu.Text("")
                 RHeader()
                 Menu.Keybind("Malphite.misc.forceR", "Force R", string.byte("T"), false, false,  true)
                 Menu.Checkbox("Malphite.interrupt.R", "Interrupt with R", true)
@@ -1259,24 +1202,19 @@ function Malphite.InitMenu()
                     end)
                 end
                 Menu.NextColumn()
-                Menu.Text("")
                 RHeader()
                 Menu.Keybind("Malphite.misc.flashR", "Flash R", string.byte("G"), false, false, true)
                 Menu.Checkbox("Malphite.misc.AutoR", "Enable Auto R", true)
                 Menu.Slider("Malphite.misc.AutoRSlider", "If can hit X Enemies", 4, 1, 5, 1)
             end)
         end)
-        Menu.Separator()
 
         Menu.NewTree("Malphite.hcMenu", "Hitchance Settings", function()
             Menu.ColumnLayout("Malphite.hcMenu.R", "Malphite.hcMenu.R", 1, true, function()
-                Menu.Text("")
                 RHeaderHit()
-                Menu.Text("")
                 Menu.Slider("Malphite.hcNew.R", "%", 45, 1, 100, 1)
             end)
         end)
-        Menu.Separator()
 
         Menu.NewTree("Malphite.drawMenu", "Draw Settings", function()
             OriUtils.AddDrawMenu(drawData)
