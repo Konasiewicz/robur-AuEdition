@@ -4,7 +4,7 @@ local scriptName = "AuSona"
 local scriptCreator = "AURUM"
 local credits = "Orietto"
 local patchNotesPrevUpdate = "11/20/2021"
-local patchNotesPreVersion, patchNotesVersion, scriptVersionUpdater = "1.0.5", "1.0.7", "1.0.7"
+local patchNotesPreVersion, patchNotesVersion, scriptVersionUpdater = "1.0.5", "1.0.8", "1.0.8"
 local scriptVersion = scriptVersionUpdater
 local scriptLastUpdated = "02/19/2022"
 local scriptIsBeta = false
@@ -211,8 +211,6 @@ function OriUtils.AddDrawMenu(data)
             Menu.ColorPicker(cacheName .. ".draw." .. id .. ".color", "Color", scriptColor)
         end)
     end
-
-    Menu.Separator()
 
     --Menu.Checkbox(cacheName .. ".draw." .. "comboDamage", "Draw combo damage on healthbar", false)
     Menu.Checkbox(cacheName .. ".draw." .. "AlwaysDraw", "Always show Drawings", false)
@@ -641,49 +639,8 @@ function Sona.InitMenu()
     end
 
     local function SonaMenu()
-        Menu.Text("" .. ASCIIArt, true)
-        Menu.Text("" .. ASCIIArt2, true)
-        Menu.Text("" .. ASCIIArt3, true)
-        Menu.Text("" .. ASCIIArt4, true)
-        Menu.Text("" .. ASCIIArt5, true)
-        Menu.Text("" .. ASCIIArt6, true)
-        Menu.Text("", true)
-        Menu.Separator()
-
-        Menu.Text("", true)
-        Menu.Text("Version:", true) Menu.SameLine()
-        Menu.ColoredText(scriptVersion, scriptColor, false)
-        Menu.Text("Last Updated:", true) Menu.SameLine()
-        Menu.ColoredText(scriptLastUpdated, scriptColor, false)
-        Menu.Text("Creator:", true) Menu.SameLine()
-        Menu.ColoredText(scriptCreator, 0x6EFF26FF, false)
-        Menu.Text("Credits to:", true) Menu.SameLine()
-        Menu.ColoredText(credits, 0x6EFF26FF, false)
-
-        if scriptIsBeta then
-            Menu.ColoredText("This script is in an early stage!", 0xFFFF00FF, true)
-            Menu.ColoredText("Please keep in mind, that you might encounter bugs/issues.", 0xFFFF00FF, true)
-            Menu.ColoredText("If you find any, please contact " .. scriptCreator .. " via robur.lol", 0xFF0000FF, true)
-        end
-
-        if Menu.Checkbox("Sona.Updates105", "Don't show updates") == false then
-            Menu.Separator()
-            Menu.ColoredText("*** UPDATE " .. scriptLastUpdated .. " ***", scriptColor, true)
-            Menu.Separator()
-            Menu.ColoredText(patchNotesVersion, 0XFFFF00FF, true)
-            Menu.Text("- Adjusted Hitchance for new Prediction", true)
-            Menu.Text("- Fixed Q Passive Bug", true)
-            Menu.Separator()
-            Menu.ColoredText("*** UPDATE " .. patchNotesPrevUpdate .. " ***", scriptColor, true)
-            Menu.Separator()
-            Menu.ColoredText(patchNotesPreVersion, 0XFFFF00FF, true)
-            Menu.Text("- Fixed R Flash with Combo R Slider", true)
-        end
-        Menu.Separator()
-
         Menu.NewTree("Sona.comboMenu", "Combo Settings", function()
             Menu.ColumnLayout("Sona.comboMenu.QE", "Sona.comboMenu.QE", 2, true, function()
-                Menu.Text("")
                 QHeader()
                 Menu.Checkbox("Sona.combo.useQ", "Enable Q", true)
                 Menu.Checkbox("Sona.combo.passiveQ", "", true)Menu.SameLine()
@@ -694,12 +651,10 @@ function Sona.InitMenu()
                         Menu.Slider("Sona.combo.QSlider", "Sec CD", 1.1, 0.1, 8, 0.1)
                     end
                 
-                Menu.Text("")
                 RHeader()
                 Menu.Checkbox("Sona.combo.useR", "Enable R", true)
                 Menu.Slider("Sona.combo.useR.minEnemies", "Use if X enemy(s)", 3, 1, 5)
                 Menu.NextColumn()
-                Menu.Text("")
                 WAlly()
                 Menu.Checkbox("Sona.combo.allyW", "Enable W", false)
                 local cbResult = OriUtils.MGet("combo.allyW")
@@ -724,7 +679,6 @@ function Sona.InitMenu()
                         end)
                     end)
                 end
-                Menu.Text("")
                 WSelf()
                 Menu.Checkbox("Sona.combo.selfW", "Enable W", false)
                     local cbResult2 = OriUtils.MGet("combo.selfW")
@@ -733,29 +687,23 @@ function Sona.InitMenu()
                     end
             end)
         end)
-        Menu.Separator()
 
         Menu.NewTree("Sona.harassMenu", "Harass Settings", function()
             Menu.ColumnLayout("Sona.harassMenu.QE", "Sona.harassMenu.QE", 1, true, function()
-                Menu.Text("")
                 QHeader()
                 Menu.Checkbox("Sona.harass.useQ", "Enable Q", true)
             end)
         end)
-        Menu.Separator()
 
         --[[Menu.NewTree("Sona.ksMenu", "Killsteal Settings", function()
             Menu.ColumnLayout("Sona.ksMenu.QE", "Sona.ksMenu.QE", 2, true, function()
-                Menu.Text("")
                 QHeader()
                 Menu.Checkbox("Sona.ks.useQ", "Killsteal with Q", true)
                 Menu.NextColumn()
-                Menu.Text("")
                 EHeader()
                 Menu.Checkbox("Sona.ks.useE", "Killsteal with E", true)
             end)
             Menu.ColumnLayout("Sona.ksMenu.WR", "Sona.ksMenu.WR", 2, true, function()
-                Menu.Text("")
                 WHeader()
                 Menu.Checkbox("Sona.ks.useW", "Enable W", true)
                 Menu.NextColumn()
@@ -763,11 +711,10 @@ function Sona.InitMenu()
                 Menu.Checkbox("Sona.ks.useR", "Enable R", true)
             end)
         end)
-        Menu.Separator()]]--
+        ]]--
 
         Menu.NewTree("Sona.miscMenu", "Misc Settings", function()
             Menu.ColumnLayout("Sona.miscMenu.R", "Sona.miscMenu.R", 2, true, function()
-                Menu.Text("")
                 WHeader()
                 Menu.Checkbox("Sona.misc.useWInFlee", "Use W in Flee", true)
                 local cbResult10 = OriUtils.MGet("misc.useWInFlee")
@@ -784,7 +731,6 @@ function Sona.InitMenu()
                     Menu.Slider("Sona.misc.EPassiveMana", "Mana > %", 60, 1, 100, 1)
                 end
                 Menu.NextColumn()
-                Menu.Text("")
                 RHeader()
                 Menu.Keybind("Sona.misc.forceR", "Force R", string.byte("T"), false, false,  true)
                 Menu.Keybind("Sona.misc.flashR", "Flash R", string.byte("G"), false, false, true)
@@ -814,17 +760,13 @@ function Sona.InitMenu()
                 end
             end)
         end)
-        Menu.Separator()
 
         Menu.NewTree("Sona.hcMenu", "Hitchance Settings", function()
             Menu.ColumnLayout("Sona.hcMenu.R", "Sona.hcMenu.R", 1, true, function()
-                Menu.Text("")
                 RHeaderHit()
-                Menu.Text("")
                 Menu.Slider("Sona.hcNew.R", "%", 50, 1, 100, 1)
             end)
         end)
-        Menu.Separator()
 
         Menu.NewTree("Sona.drawMenu", "Draw Settings", function()
             OriUtils.AddDrawMenu(drawData)
