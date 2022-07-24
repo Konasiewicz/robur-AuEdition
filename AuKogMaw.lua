@@ -5,7 +5,7 @@ local scriptCreator = "AURUM"
 local credits = "Orietto"
 local patchNotesPrevUpdate = "02/19/2022"
 local patchNotesPreVersion = "1.3.0"
-local patchNotesVersion, scriptVersionUpdater = "1.3.2", "1.3.3"
+local patchNotesVersion, scriptVersionUpdater = "1.3.2", "1.3.4"
 local scriptVersion = scriptVersionUpdater
 local scriptLastUpdated = "02/20/2022"
 local scriptIsBeta = false
@@ -933,28 +933,28 @@ end
 
 function KogMaw.InitMenu()
     local function QHeader()
-        Menu.ColoredText(drawData[1].displayText, scriptColor, true)
+        Menu.Separator(drawData[1].displayText, scriptColor, true)
     end
     local function QHeaderHit()
-        Menu.ColoredText(drawData[1].displayText .. " Hitchance", scriptColor, true)
+        Menu.Separator(drawData[1].displayText .. " Hitchance", scriptColor, true)
     end
 
     local function WHeader()
-        Menu.ColoredText(drawData[2].displayText, scriptColor, true)
+        Menu.Separator(drawData[2].displayText, scriptColor, true)
     end
 
     local function EHeader()
-        Menu.ColoredText(drawData[3].displayText, scriptColor, true)
+        Menu.Separator(drawData[3].displayText, scriptColor, true)
     end
     local function EHeaderHit()
-        Menu.ColoredText(drawData[3].displayText .. " Hitchance", scriptColor, true)
+        Menu.Separator(drawData[3].displayText .. " Hitchance", scriptColor, true)
     end
 
     local function RHeader()
-        Menu.ColoredText(drawData[4].displayText, scriptColor, true)
+        Menu.Separator(drawData[4].displayText, scriptColor, true)
     end
     local function RHeaderHit()
-        Menu.ColoredText(drawData[4].displayText .. " Hitchance", scriptColor, true)
+        Menu.Separator(drawData[4].displayText .. " Hitchance", scriptColor, true)
     end
 
     local function KogMawMenu()
@@ -980,13 +980,15 @@ function KogMaw.InitMenu()
 
         Menu.NewTree("KogMaw.AdvancedRMenu", "Advanced R Settings (Don't change, unless experienced)", function()
             Menu.ColumnLayout("KogMaw.AdvancedRMenu.R1", "KogMaw.AdvancedRMenu.R1", 1, true, function()
-                Menu.ColoredText("Don't use, if AA above", 0x3C9BF0FF, true)
+                Menu.Separator("Don't use, if AA above", 0x3C9BF0FF, true)
                 Menu.Slider("KogMaw.AdvancedR.AASpeed", "Speed", 2.15, 0.1, 4, 0.01)
-                Menu.ColoredText("Use R inside AA Range, if AA Speed below and AD or Level below", 0x3C9BF0FF, true)
+                Menu.Separator("Use R inside AA Range, if AA Speed", 0x3C9BF0FF, true)
+                Menu.Separator("below and AD or Level below", 0x3C9BF0FF, true)
                 Menu.Slider("KogMaw.AdvancedR.AASpeed2", "Speed", 2.15, 0.1, 4, 0.01)
                 Menu.Slider("KogMaw.AdvancedR.AD", "AD", 200, 61, 560, 1)
                 Menu.Slider("KogMaw.AdvancedR.Level", "Level", 9, 1, 18, 1)
-                Menu.ColoredText("Use R inside AA Range, if Target below and AA Speed below and AD OR Level above", 0x3C9BF0FF, true)
+                Menu.Separator("Use R inside AA Range, if Target and", 0x3C9BF0FF, true)
+                Menu.Separator("AA Speed below and AD OR Level above", 0x3C9BF0FF, true)
                 Menu.Slider("KogMaw.AdvancedR.TargetHP", "% HP", 40, 1, 100, 1)
                 Menu.Slider("KogMaw.AdvancedR.AASpeed3", "Speed", 2.15, 0.1, 4, 0.01)
                 Menu.Slider("KogMaw.AdvancedR.AD2", "AD", 200, 61, 560, 1)

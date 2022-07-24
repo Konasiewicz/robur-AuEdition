@@ -5,7 +5,7 @@ local scriptCreator = "AURUM"
 local credits = "Orietto"
 local patchNotesPrevUpdate = "01/05/2022"
 local patchNotesPreVersion = "1.0.5"
-local patchNotesVersion, scriptVersionUpdater = "1.0.7", "1.0.8"
+local patchNotesVersion, scriptVersionUpdater = "1.0.7", "1.0.9"
 local scriptVersion = scriptVersionUpdater
 local scriptLastUpdated = "06/05/2022"
 local scriptIsBeta = false
@@ -896,31 +896,31 @@ end
 
 function Karthus.InitMenu()
     local function QHeader()
-        Menu.ColoredText(drawData[1].displayText, scriptColor, true)
+        Menu.Separator(drawData[1].displayText, scriptColor, true)
     end
     local function QHeaderHit()
-        Menu.ColoredText(drawData[1].displayText .. " Hitchance", scriptColor, true)
+        Menu.Separator(drawData[1].displayText .. " Hitchance", scriptColor, true)
     end
 
     local function WHeader()
-        Menu.ColoredText(drawData[2].displayText, scriptColor, true)
+        Menu.Separator(drawData[2].displayText, scriptColor, true)
     end
     local function WHeaderHit()
-        Menu.ColoredText(drawData[2].displayText .. " Hitchance", scriptColor, true)
+        Menu.Separator(drawData[2].displayText .. " Hitchance", scriptColor, true)
     end
 
     local function EHeader()
-        Menu.ColoredText(drawData[3].displayText, scriptColor, true)
+        Menu.Separator(drawData[3].displayText, scriptColor, true)
     end
     local function EHeaderHit()
-        Menu.ColoredText(drawData[3].displayText .. " Hitchance", scriptColor, true)
+        Menu.Separator(drawData[3].displayText .. " Hitchance", scriptColor, true)
     end
 
     local function RHeader()
-        Menu.ColoredText(drawData[4].displayText, scriptColor, true)
+        Menu.Separator(drawData[4].displayText, scriptColor, true)
     end
     local function RHeaderHit()
-        Menu.ColoredText(drawData[4].displayText .. " Hitchance", scriptColor, true)
+        Menu.Separator(drawData[4].displayText .. " Hitchance", scriptColor, true)
     end
 
     local function KarthusMenu()
@@ -950,7 +950,7 @@ function Karthus.InitMenu()
 
         Menu.NewTree("Karthus.clearMenu", "Clear Settings", function()
             Menu.NewTree("Karthus.waveMenu", "Waveclear", function()
-                Menu.ColoredText("Holding LMB (Fast Clear) is required for E", scriptColor, true)
+                Menu.Separator("Holding LMB (Fast Clear) is required for E", scriptColor, true)
                 Menu.Checkbox("Karthus.clear.useQ", "Use Q", false)
                 Menu.Checkbox("Karthus.clear.useQPred", "Use Prediction for Waveclear", true)
                 Menu.Slider("Karthus.clear.QManaSlider", "Don't use if Mana < %", 35, 1, 100, 1)
