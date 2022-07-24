@@ -5,7 +5,7 @@ local scriptCreator = "AURUM"
 local credits = "Orietto"
 local patchNotesPrevUpdate = "11/26/2021"
 local patchNotesPreVersion = "1.1.5"
-local patchNotesVersion, scriptVersionUpdater = "1.1.7", "1.1.8"
+local patchNotesVersion, scriptVersionUpdater = "1.1.7", "1.1.9"
 local scriptVersion = scriptVersionUpdater
 local scriptLastUpdated = "02/19/2021"
 local scriptIsBeta = false
@@ -1120,39 +1120,39 @@ end
 
 function Thresh.InitMenu()
     local function QHeader()
-        Menu.ColoredText(drawData[1].displayText, scriptColor, true)
+        Menu.Separator(drawData[1].displayText, scriptColor, true)
     end
     local function QHeaderHit()
-        Menu.ColoredText(drawData[1].displayText .. " Hitchance", scriptColor, true)
+        Menu.Separator(drawData[1].displayText .. " Hitchance", scriptColor, true)
     end
 
     local function WHeader()
-        Menu.ColoredText(drawData[2].displayText, scriptColor, true)
+        Menu.Separator(drawData[2].displayText, scriptColor, true)
     end
 
     local function EHeader()
-        Menu.ColoredText(drawData[3].displayText, scriptColor, true)
+        Menu.Separator(drawData[3].displayText, scriptColor, true)
     end
     local function EHeaderHit()
-        Menu.ColoredText(drawData[3].displayText .. " Hitchance", scriptColor, true)
+        Menu.Separator(drawData[3].displayText .. " Hitchance", scriptColor, true)
     end
 
     local function RHeader()
-        Menu.ColoredText(drawData[4].displayText, scriptColor, true)
+        Menu.Separator(drawData[4].displayText, scriptColor, true)
     end
     local function RHeaderHit()
-        Menu.ColoredText(drawData[4].displayText .. " Hitchance", scriptColor, true)
+        Menu.Separator(drawData[4].displayText .. " Hitchance", scriptColor, true)
     end
 
     -- Special Headers
     local function WSelf()
-        Menu.ColoredText("Use on Self", scriptColor, true)
+        Menu.Separator("Use on Self", scriptColor, true)
     end
     local function WAlly()
-        Menu.ColoredText("Use on Ally", scriptColor, true)
+        Menu.Separator("Use on Ally", scriptColor, true)
     end
     local function WRange()
-        Menu.ColoredText("Use if in E Range and Thresh", scriptColor, true)
+        Menu.Separator("Use if in E Range and Thresh", scriptColor, true)
     end
 
     local function ThreshMenu()
