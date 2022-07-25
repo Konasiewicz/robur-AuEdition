@@ -5,7 +5,7 @@ local scriptCreator = "AURUM"
 local credits = "Orietto"
 local patchNotesPrevUpdate = "01/05/2022"
 local patchNotesPreVersion = "1.0.5"
-local patchNotesVersion, scriptVersionUpdater = "1.0.7", "1.0.8"
+local patchNotesVersion, scriptVersionUpdater = "1.0.7", "1.0.9"
 local scriptVersion = scriptVersionUpdater
 local scriptLastUpdated = "06/05/2022"
 local scriptIsBeta = false
@@ -287,8 +287,6 @@ function OriUtils.AddDrawMenu(data)
         end)
     end
 
-    Menu.Separator()
-
     Menu.Checkbox(cacheName .. ".draw." .. "comboDamage", "Draw combo damage on healthbar", true)
     Menu.Checkbox("Karthus.drawMenu.addRDamage", "Include R Damage", true)
     Menu.Checkbox("Karthus.drawMenu.AlwaysDraw", "Always show Drawings", false)
@@ -338,6 +336,12 @@ local drawData = {
     {slot = slots.R, id = "R", displayText = "[R] Requiem", range = spells.R.Range}
 }
 
+local ASCIIArt = "                 _  __          _   _                "
+local ASCIIArt1 = "      /\\        | |/ /         | | | |               "
+local ASCIIArt2 = "     /  \\  _   _| ' / __ _ _ __| |_| |__  _   _ ___  "
+local ASCIIArt3 = "    / /\\ \\| | | |  < / _` | '__| __| '_ \\| | | / __| "
+local ASCIIArt4 = "   / ____ \\ |_| | . \\ (_| | |  | |_| | | | |_| \\__ \\ "
+local ASCIIArt5 = "  /_/    \\_\\__,_|_|\\_\\__,_|_|   \\__|_| |_|\\__,_|___/ "
 
 local Karthus = {}
 
@@ -622,25 +626,6 @@ function combatVariants.Harass()
             end
         end
     end
-	
-	
-	    if OriUtils.CanCastSpell(slots.Q, "lasthit.useQ") then
-        local qMinions = ObjManager.GetNearby("enemy", "minions")
-        for iQ, minionQ in ipairs(qMinions) do 
-            local healthPred = spells.Q:GetHealthPred(minionQ)
-            local minion = minionQ.AsMinion
-            local qDamage = Karthus.GetDamage(minion, slots.Q)
-            if OriUtils.IsValidTarget(minionQ, spells.Q.Range) then
-                if healthPred > 0 and healthPred < floor(qDamage / 2) then
-						if spells.Q:Cast(minion) then
-                        return
-						end
-                end
-            end
-        end
-    end
-	
-	
 end
 
 function combatVariants.Waveclear()
@@ -782,12 +767,7 @@ function combatVariants.Waveclear()
 end
 
 function combatVariants.Lasthit()
-
-end
-
-
-function events.OnUnkillableMinion(minion)
-	    if OriUtils.CanCastSpell(slots.Q, "lasthit.useQ") and Orbwalker.GetMode() == "Lasthit" then
+    if OriUtils.CanCastSpell(slots.Q, "lasthit.useQ") then
         local qMinions = ObjManager.GetNearby("enemy", "minions")
         for iQ, minionQ in ipairs(qMinions) do 
             local healthPred = spells.Q:GetHealthPred(minionQ)
@@ -795,32 +775,13 @@ function events.OnUnkillableMinion(minion)
             local qDamage = Karthus.GetDamage(minion, slots.Q)
             if OriUtils.IsValidTarget(minionQ, spells.Q.Range) then
                 if healthPred > 0 and healthPred < floor(qDamage / 2) then
-						if spells.Q:Cast(minion) then
+                    if spells.Q:Cast(minion) then
                         return
-						end
+                    end
                 end
             end
         end
     end
-end
-
-function handle_aa()
-
-        local activeMode = Orbwalker.GetMode()
-        local blockAttackCond = false
-        if activeMode == "Combo" then
-            blockAttackCond = true
-        elseif activeMode == "Harass" then
-            blockAttackCond = true
-        end
-		
-        Orbwalker.BlockAttack(blockAttackCond)
-		
-		--if Karthus.HasE() and activeMode == "nil" then
-		--	if spells.E:Cast() then
-        --   return
-        --    end
-		--end
 end
 
 function combatVariants.Flee()
@@ -842,7 +803,6 @@ function events.OnTick()
     Karthus.DeadSpam()
     Karthus.forceR()
     Karthus.KS()
-	handle_aa()
     Karthus.BaronSteal()
     Karthus.DrakeSteal()
 end
@@ -936,35 +896,34 @@ end
 
 function Karthus.InitMenu()
     local function QHeader()
-        Menu.ColoredText(drawData[1].displayText, scriptColor, true)
+        Menu.Separator(drawData[1].displayText, scriptColor, true)
     end
     local function QHeaderHit()
-        Menu.ColoredText(drawData[1].displayText .. " Hitchance", scriptColor, true)
+        Menu.Separator(drawData[1].displayText .. " Hitchance", scriptColor, true)
     end
 
     local function WHeader()
-        Menu.ColoredText(drawData[2].displayText, scriptColor, true)
+        Menu.Separator(drawData[2].displayText, scriptColor, true)
     end
     local function WHeaderHit()
-        Menu.ColoredText(drawData[2].displayText .. " Hitchance", scriptColor, true)
+        Menu.Separator(drawData[2].displayText .. " Hitchance", scriptColor, true)
     end
 
     local function EHeader()
-        Menu.ColoredText(drawData[3].displayText, scriptColor, true)
+        Menu.Separator(drawData[3].displayText, scriptColor, true)
     end
     local function EHeaderHit()
-        Menu.ColoredText(drawData[3].displayText .. " Hitchance", scriptColor, true)
+        Menu.Separator(drawData[3].displayText .. " Hitchance", scriptColor, true)
     end
 
     local function RHeader()
-        Menu.ColoredText(drawData[4].displayText, scriptColor, true)
+        Menu.Separator(drawData[4].displayText, scriptColor, true)
     end
     local function RHeaderHit()
-        Menu.ColoredText(drawData[4].displayText .. " Hitchance", scriptColor, true)
+        Menu.Separator(drawData[4].displayText .. " Hitchance", scriptColor, true)
     end
 
     local function KarthusMenu()
-
         Menu.NewTree("Karthus.comboMenu", "Combo Settings", function()
             Menu.ColumnLayout("Karthus.comboMenu.QE", "Karthus.comboMenu.QE", 3, true, function()
                 QHeader()
@@ -991,7 +950,7 @@ function Karthus.InitMenu()
 
         Menu.NewTree("Karthus.clearMenu", "Clear Settings", function()
             Menu.NewTree("Karthus.waveMenu", "Waveclear", function()
-                Menu.ColoredText("Holding LMB (Fast Clear) is required for E", scriptColor, true)
+                Menu.Separator("Holding LMB (Fast Clear) is required for E", scriptColor, true)
                 Menu.Checkbox("Karthus.clear.useQ", "Use Q", false)
                 Menu.Checkbox("Karthus.clear.useQPred", "Use Prediction for Waveclear", true)
                 Menu.Slider("Karthus.clear.QManaSlider", "Don't use if Mana < %", 35, 1, 100, 1)
@@ -1050,14 +1009,12 @@ function Karthus.InitMenu()
             end)
         end)
 
-
         Menu.NewTree("Karthus.lasthitMenu", "Lasthit Settings", function()
             Menu.ColumnLayout("Karthus.lasthitMenu.Q", "Karthus.lasthitMenu.Q", 1, true, function()
                 QHeader()
                 Menu.Checkbox("Karthus.lasthit.useQ", "Enable Q", true)
             end)
         end)
-
 
         Menu.NewTree("Karthus.stealMenu", "Steal Settings", function()
             Menu.NewTree("Karthus.ksMenu", "Killsteal", function()
